@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DPMods Minimal UI</title>
+    <title>DPMods Fullscreen UI</title>
     <style>
         :root {
-            --bg-color: transparent;
-            --card-bg: #0d0d0d;
+            --bg-color: #0d0d0d;
             --text-primary: #ffffff;
             --text-secondary: #8e8e93;
             --accent-cyan: #00e5ff;
@@ -21,33 +20,27 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        /* Set body to fill the entire WebView with NO margins */
         body {
             margin: 0;
             padding: 0;
             background-color: var(--bg-color);
             color: var(--text-primary);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            width: 100vw;
+            height: 100vh;
             overflow: hidden;
-        }
-
-        /* --- THE CLEAN FLOATING CARD --- */
-        .dp-card {
-            width: 92%;
-            max-width: 400px;
-            height: 85vh;
-            max-height: 750px;
-            background-color: var(--card-bg);
-            border-radius: 35px;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.9);
+        }
+
+        /* --- THE EDGE-TO-EDGE CONTAINER --- */
+        .dp-card {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
             position: relative;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         /* --- ADVANCED ANIMATIONS --- */
@@ -84,9 +77,11 @@
             align-items: center;
             padding: 20px 25px;
             z-index: 10;
+            background: var(--bg-color);
+            border-bottom: 1px solid var(--border-subtle);
         }
         .header svg { width: 24px; height: 24px; fill: var(--text-primary); }
-        .header-title { font-weight: 700; font-size: 16px; letter-spacing: 0.5px; }
+        .header-title { font-weight: 700; font-size: 18px; letter-spacing: 0.5px; }
         
         .btn-close { padding: 5px; margin: -5px; }
         .btn-close svg {
@@ -107,24 +102,36 @@
         .scroll-content::-webkit-scrollbar { display: none; }
 
         /* --- PROFILE --- */
-        .profile { padding: 10px 25px 20px 25px; display: flex; gap: 18px; align-items: center; }
+        .profile { padding: 15px 25px 20px 25px; display: flex; gap: 18px; align-items: center; }
         
         .avatar { 
-            width: 75px; 
-            height: 75px; 
+            width: 80px; 
+            height: 80px; 
             border-radius: 50%; 
             object-fit: cover; 
             flex-shrink: 0; 
             background: var(--icon-bg);
             border: 2px solid transparent;
-            background-image: linear-gradient(var(--card-bg), var(--card-bg)), linear-gradient(135deg, var(--accent-cyan), #b400ff);
+            background-image: linear-gradient(var(--bg-color), var(--bg-color)), linear-gradient(135deg, var(--accent-cyan), #b400ff);
             background-origin: border-box;
             background-clip: content-box, border-box;
         }
         
         .profile-info { flex: 1; }
-        .profile-info h1 { margin: 0 0 5px 0; font-size: 22px; font-weight: 800; letter-spacing: -0.5px;}
-        .profile-info p { margin: 0 0 10px 0; color: var(--text-secondary); font-size: 13px; line-height: 1.4; }
+        .profile-info h1 { margin: 0 0 2px 0; font-size: 24px; font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px;}
+        
+        /* NEW: SUBSCRIBER COUNT BADGE */
+        .sub-count {
+            font-size: 13px;
+            font-weight: 600;
+            color: #ff4d4d;
+            background: rgba(255, 77, 77, 0.1);
+            padding: 3px 8px;
+            border-radius: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .profile-info p { margin: 5px 0 10px 0; color: var(--text-secondary); font-size: 14px; line-height: 1.4; }
         
         .tags { display: flex; gap: 8px; flex-wrap: wrap; }
         .tag { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; background: var(--icon-bg); color: var(--text-secondary); }
@@ -141,7 +148,6 @@
             border: none; border-radius: 30px; font-size: 15px; font-weight: 800;
             display: flex; justify-content: center; align-items: center; gap: 8px;
             padding: 12px 0;
-            /* Shimmer Effect */
             background: linear-gradient(90deg, #ffffff 0%, #f0f0f0 25%, #ffffff 50%);
             background-size: 200% auto;
             animation: shimmer 3s infinite linear;
@@ -192,7 +198,6 @@
         .p-handle { color: var(--text-secondary); font-size: 13px; }
         .p-text { font-size: 14px; line-height: 1.5; margin: 0 0 12px 0; color: #e1e1e1;}
         
-        /* YouTube Preview Block */
         .yt-preview { 
             width: 100%; border-radius: 12px; border: 1px solid var(--border-subtle); 
             overflow: hidden; position: relative; background: #111; 
@@ -213,7 +218,7 @@
         .p-actions svg:active { stroke: var(--text-primary); }
 
         /* --- BOTTOM NAV --- */
-        .bottom-nav { display: flex; justify-content: space-between; padding: 15px 35px; background: rgba(13,13,13,0.95); backdrop-filter: blur(10px); border-top: 1px solid var(--border-subtle); z-index: 10; }
+        .bottom-nav { display: flex; justify-content: space-between; padding: 15px 35px; background: rgba(13,13,13,0.98); backdrop-filter: blur(10px); border-top: 1px solid var(--border-subtle); z-index: 10; }
         .bottom-nav svg { width: 24px; height: 24px; fill: none; stroke: var(--text-secondary); stroke-width: 2.2; transition: all 0.2s;}
         .bottom-nav svg.active { fill: var(--text-primary); stroke: var(--text-primary); }
         .nav-dp { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; opacity: 0.5; transition: all 0.2s;}
@@ -242,7 +247,7 @@
         <div class="profile anim">
             <img class="avatar" src="https://i.pinimg.com/280x280_RS/bb/88/88/bb888815367bffe2bd9236700c069466.jpg" alt="DPMods">
             <div class="profile-info">
-                <h1>DPMods</h1>
+                <h1>DPMods <span class="sub-count">10.5K+ Subs</span></h1>
                 <p>Design + Code for Android Mod Menus. Join the VIP Community.</p>
                 <div class="tags">
                     <span class="tag">dpmods.com</span>
@@ -333,12 +338,11 @@
     function triggerClose() {
         const card = document.getElementById('mainCard');
         
-        // Disable entrance animations and trigger exit animation
         card.style.animation = 'none';
-        card.style.transform = 'scale(0.85) translateY(20px)';
+        card.style.transform = 'translateY(30px)';
         card.style.opacity = '0';
         
-        // Wait for CSS transition to finish, then send the action:// URL
+        // Exact action required for the Java WebView to close the dialog
         setTimeout(() => {
             window.location.href = "action://close";
         }, 300);
