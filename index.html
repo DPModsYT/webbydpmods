@@ -7,10 +7,10 @@
     <style>
         /* --- THEME VARIABLES --- */
         :root {
-            --bg-color: #0d1117;     /* Deep dark background */
-            --card-bg: #161b22;      /* Inner card background */
-            --accent-cyan: #00E5FF;  /* Neon Cyan */
-            --accent-pink: #F91880;  /* Cyber Pink */
+            --bg-color: transparent; /* Must be transparent to see Java card */
+            --card-bg: #161b22;      
+            --accent-cyan: #00E5FF;  
+            --accent-pink: #F91880;  
             --text-main: #E6EAD3;
             --text-muted: #8B949E;
             --border-dashed: #2A3245;
@@ -21,18 +21,34 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Courier New', Courier, monospace; /* Terminal vibe */
+            font-family: 'Courier New', Courier, monospace;
         }
 
         body {
-            background-color: transparent; /* Let Android handle the outer card */
+            background-color: var(--bg-color);
             color: var(--text-main);
             padding: 10px;
-            /* Hide scrollbar for cleaner look */
+            /* Make body exactly height of viewport to prevent ugly scrolling */
+            min-height: 100vh; 
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
             scrollbar-width: none; 
-            -ms-overflow-style: none;
         }
         body::-webkit-scrollbar { display: none; }
+
+        /* Hacker Grid Background */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: 
+                linear-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 229, 255, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: -1;
+            pointer-events: none;
+        }
 
         /* --- ANIMATIONS --- */
         @keyframes slideUpFade {
@@ -56,6 +72,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            flex-grow: 1;
             animation: slideUpFade 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
         }
 
@@ -68,8 +85,8 @@
             border-radius: 30px;
             font-size: 11px;
             font-weight: bold;
-            margin-top: 15px;
-            margin-bottom: 25px;
+            margin-top: 10px;
+            margin-bottom: 20px;
             letter-spacing: 1px;
             animation: pulseGlow 2s infinite;
         }
@@ -81,13 +98,13 @@
             margin-bottom: 8px;
             letter-spacing: 2px;
             text-align: center;
+            text-shadow: 0 0 10px rgba(255,255,255,0.2);
         }
 
-        /* Typing Effect */
         .subtitle-container {
             display: flex;
             justify-content: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
         .subtitle {
             color: var(--text-muted);
@@ -104,11 +121,12 @@
             border-radius: 15px;
             padding: 25px;
             width: 100%;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             opacity: 0;
             animation: slideUpFade 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
             animation-delay: 0.2s;
             box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.05);
         }
 
         .card-title {
@@ -155,11 +173,13 @@
             text-decoration: none;
             font-weight: bold;
             font-size: 14px;
-            margin-top: 10px;
+            margin-top: auto; /* Pushes button to bottom */
+            margin-bottom: 10px;
             transition: all 0.2s ease;
             opacity: 0;
             animation: slideUpFade 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
             animation-delay: 0.4s;
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
         }
 
         .btn-close:active {
@@ -172,7 +192,6 @@
 <body>
 
     <div class="container">
-        
         <div class="status-pill">● LIVE SYSTEM TRANSMISSION</div>
         <h1 class="title">DPMODS CORE V3</h1>
         <div class="subtitle-container">
@@ -192,7 +211,6 @@
         </div>
 
         <a href="action://close" class="btn-close">CLOSE ANNOUNCEMENT</a>
-
     </div>
 
     <script>
