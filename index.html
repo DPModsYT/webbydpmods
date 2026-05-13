@@ -7,12 +7,12 @@
     <style>
         :root {
             --bg-color: transparent;
-            --card-bg: #0f0f0f;
+            --card-bg: #0d0d0d;
             --text-primary: #ffffff;
             --text-secondary: #8e8e93;
             --accent-cyan: #00e5ff;
             --accent-yellow: #ffcc00;
-            --icon-bg: #1f1f1f;
+            --icon-bg: #1a1a1a;
             --border-subtle: #222222;
         }
 
@@ -45,21 +45,37 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8); /* Replaced stroke with a deep, clean shadow */
+            box-shadow: 0 25px 60px rgba(0,0,0,0.9);
             position: relative;
-            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        /* --- ANIMATIONS --- */
+        /* --- ADVANCED ANIMATIONS --- */
         @keyframes slideUp {
-            0% { opacity: 0; transform: translateY(15px); }
+            0% { opacity: 0; transform: translateY(20px); }
             100% { opacity: 1; transform: translateY(0); }
         }
-        .anim { opacity: 0; animation: slideUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-        .d-1 { animation-delay: 0.05s; } .d-2 { animation-delay: 0.1s; } .d-3 { animation-delay: 0.15s; }
+        
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
 
-        .squish { transition: transform 0.15s ease; cursor: pointer; }
-        .squish:active { transform: scale(0.92); }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .anim { opacity: 0; animation: slideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        .d-1 { animation-delay: 0.05s; } 
+        .d-2 { animation-delay: 0.1s; } 
+        .d-3 { animation-delay: 0.15s; }
+        .d-4 { animation-delay: 0.2s; }
+        .d-5 { animation-delay: 0.25s; }
+
+        .squish { transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer; }
+        .squish:active { transform: scale(0.88); }
 
         /* --- HEADER --- */
         .header {
@@ -86,13 +102,13 @@
             flex: 1;
             overflow-y: auto;
             overflow-x: hidden;
+            scroll-behavior: smooth;
         }
         .scroll-content::-webkit-scrollbar { display: none; }
 
         /* --- PROFILE --- */
         .profile { padding: 10px 25px 20px 25px; display: flex; gap: 18px; align-items: center; }
         
-        /* 🔥 THE FIX: flex-shrink: 0 stops the image from ever turning into an oval! */
         .avatar { 
             width: 75px; 
             height: 75px; 
@@ -100,23 +116,35 @@
             object-fit: cover; 
             flex-shrink: 0; 
             background: var(--icon-bg);
+            border: 2px solid transparent;
+            background-image: linear-gradient(var(--card-bg), var(--card-bg)), linear-gradient(135deg, var(--accent-cyan), #b400ff);
+            background-origin: border-box;
+            background-clip: content-box, border-box;
         }
         
         .profile-info { flex: 1; }
-        .profile-info h1 { margin: 0 0 5px 0; font-size: 22px; font-weight: 800; }
+        .profile-info h1 { margin: 0 0 5px 0; font-size: 22px; font-weight: 800; letter-spacing: -0.5px;}
         .profile-info p { margin: 0 0 10px 0; color: var(--text-secondary); font-size: 13px; line-height: 1.4; }
         
         .tags { display: flex; gap: 8px; flex-wrap: wrap; }
         .tag { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; background: var(--icon-bg); color: var(--text-secondary); }
-        .tag.vip { background: var(--accent-yellow); color: #000; }
+        .tag.vip { 
+            background: var(--accent-yellow); 
+            color: #000; 
+            box-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
+        }
 
         /* --- BUTTONS --- */
         .actions { display: flex; gap: 12px; padding: 0 25px 20px 25px; }
         .btn-yt {
-            flex: 1; background: #ffffff; color: #000000;
+            flex: 1; color: #000000;
             border: none; border-radius: 30px; font-size: 15px; font-weight: 800;
             display: flex; justify-content: center; align-items: center; gap: 8px;
             padding: 12px 0;
+            /* Shimmer Effect */
+            background: linear-gradient(90deg, #ffffff 0%, #f0f0f0 25%, #ffffff 50%);
+            background-size: 200% auto;
+            animation: shimmer 3s infinite linear;
         }
         .btn-yt svg { width: 22px; height: 22px; }
         
@@ -124,25 +152,37 @@
             width: 46px; height: 46px; border-radius: 50%;
             background: var(--icon-bg); display: flex; justify-content: center; align-items: center;
             border: none; flex-shrink: 0;
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.05);
         }
         .btn-circle svg { width: 20px; height: 20px; fill: var(--text-primary); }
 
         /* --- SEARCH --- */
-        .search-box { padding: 0 25px 15px 25px; display: none; }
-        .search-input { width: 100%; padding: 12px 18px; border-radius: 20px; border: none; background: var(--icon-bg); color: white; outline: none; font-size: 14px; }
+        .search-box { 
+            padding: 0 25px 15px 25px; 
+            max-height: 0; 
+            opacity: 0; 
+            overflow: hidden; 
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .search-box.show { max-height: 60px; opacity: 1; }
+        .search-input { width: 100%; padding: 12px 18px; border-radius: 20px; border: 1px solid var(--border-subtle); background: var(--icon-bg); color: white; outline: none; font-size: 14px; transition: border 0.3s; }
+        .search-input:focus { border-color: var(--accent-cyan); }
 
         /* --- TABS --- */
         .tabs { display: flex; border-bottom: 1px solid var(--border-subtle); padding: 0 10px; }
-        .tab { flex: 1; text-align: center; padding: 15px 0; color: var(--text-secondary); font-weight: 700; font-size: 14px; position: relative; }
+        .tab { flex: 1; text-align: center; padding: 15px 0; color: var(--text-secondary); font-weight: 700; font-size: 14px; position: relative; transition: color 0.3s;}
         .tab.active { color: var(--text-primary); }
-        .tab.active::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 40px; height: 3px; background: var(--accent-cyan); border-radius: 3px 3px 0 0; }
+        .tab.active::after { 
+            content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); 
+            width: 40px; height: 3px; background: var(--accent-cyan); border-radius: 3px 3px 0 0; 
+            box-shadow: 0 -2px 8px rgba(0, 229, 255, 0.5);
+        }
 
         /* --- FEED --- */
         .feed { padding: 20px 25px; }
         .post { display: flex; gap: 15px; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid var(--border-subtle); }
         .post:last-child { border-bottom: none; }
         
-        /* User avatar in posts */
         .p-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
         
         .p-content { flex: 1; }
@@ -157,24 +197,27 @@
             width: 100%; border-radius: 12px; border: 1px solid var(--border-subtle); 
             overflow: hidden; position: relative; background: #111; 
             aspect-ratio: 16/9; display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            cursor: pointer;
         }
         .yt-play { 
             width: 50px; height: 50px; background: rgba(0,0,0,0.7); 
             border-radius: 50%; display: flex; justify-content: center; align-items: center; 
             backdrop-filter: blur(4px); margin-bottom: 10px;
+            animation: pulse 2.5s infinite ease-in-out;
         }
         .yt-play svg { width: 22px; height: 22px; fill: white; margin-left: 4px; }
-        .yt-title { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 1px;}
+        .yt-title { font-size: 12px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 1px;}
 
         .p-actions { display: flex; justify-content: space-between; padding-right: 20px; margin-top: 15px; }
-        .p-actions svg { width: 18px; height: 18px; fill: none; stroke: var(--text-secondary); stroke-width: 2; }
+        .p-actions svg { width: 18px; height: 18px; fill: none; stroke: var(--text-secondary); stroke-width: 2; transition: stroke 0.2s;}
+        .p-actions svg:active { stroke: var(--text-primary); }
 
         /* --- BOTTOM NAV --- */
-        .bottom-nav { display: flex; justify-content: space-between; padding: 15px 35px; background: var(--card-bg); border-top: 1px solid var(--border-subtle); z-index: 10; }
-        .bottom-nav svg { width: 24px; height: 24px; fill: none; stroke: var(--text-secondary); stroke-width: 2.2; }
+        .bottom-nav { display: flex; justify-content: space-between; padding: 15px 35px; background: rgba(13,13,13,0.95); backdrop-filter: blur(10px); border-top: 1px solid var(--border-subtle); z-index: 10; }
+        .bottom-nav svg { width: 24px; height: 24px; fill: none; stroke: var(--text-secondary); stroke-width: 2.2; transition: all 0.2s;}
         .bottom-nav svg.active { fill: var(--text-primary); stroke: var(--text-primary); }
-        .nav-dp { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; opacity: 0.5; }
-        .nav-dp.active { opacity: 1; border: 2px solid var(--accent-cyan); }
+        .nav-dp { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; opacity: 0.5; transition: all 0.2s;}
+        .nav-dp.active { opacity: 1; border: 2px solid var(--accent-cyan); box-shadow: 0 0 8px rgba(0, 229, 255, 0.4); }
 
     </style>
 </head>
@@ -183,22 +226,21 @@
 <div class="dp-card" id="mainCard">
 
     <div class="header">
-        <svg class="squish" onclick="closeDialog()" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        <svg class="squish" onclick="triggerClose()" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
         <div class="header-title">@dpmods</div>
-        <div class="btn-close squish" onclick="closeDialog()">
+        <div class="btn-close squish" onclick="triggerClose()">
             <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </div>
     </div>
 
-    <div class="search-box anim" id="searchBar">
-        <input type="text" class="search-input" id="searchInput" placeholder="Search posts..." onkeyup="filterPosts()">
+    <div class="search-box" id="searchBar">
+        <input type="text" class="search-input" id="searchInput" placeholder="Search posts, videos..." onkeyup="filterPosts()">
     </div>
 
     <div class="scroll-content">
         
         <div class="profile anim">
             <img class="avatar" src="https://i.pinimg.com/280x280_RS/bb/88/88/bb888815367bffe2bd9236700c069466.jpg" alt="DPMods">
-            
             <div class="profile-info">
                 <h1>DPMods</h1>
                 <p>Design + Code for Android Mod Menus. Join the VIP Community.</p>
@@ -227,9 +269,9 @@
             <div class="tab squish" onclick="switchTab(this)">Updates</div>
         </div>
 
-        <div class="feed anim d-3" id="postFeed">
+        <div class="feed" id="postFeed">
             
-            <div class="post dp-post" data-keyword="vip v2 login engine video">
+            <div class="post dp-post anim d-3" data-keyword="vip v2 login engine video">
                 <img class="p-avatar squish" src="https://i.pinimg.com/280x280_RS/bb/88/88/bb888815367bffe2bd9236700c069466.jpg" alt="DPMods">
                 <div class="p-content">
                     <div class="p-header">
@@ -252,7 +294,7 @@
                 </div>
             </div>
 
-            <div class="post dp-post" data-keyword="telegram group keys">
+            <div class="post dp-post anim d-4" data-keyword="telegram group keys">
                 <img class="p-avatar squish" src="https://i.pinimg.com/280x280_RS/bb/88/88/bb888815367bffe2bd9236700c069466.jpg" alt="DPMods">
                 <div class="p-content">
                     <div class="p-header">
@@ -272,7 +314,7 @@
         </div>
     </div>
 
-    <div class="bottom-nav">
+    <div class="bottom-nav anim d-5">
         <svg class="active squish" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
         <svg class="squish" onclick="toggleSearch()" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
         <svg class="squish" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
@@ -287,22 +329,18 @@
         window.open(url, '_blank');
     }
 
-    // --- PROPER CLOSE ACTION LOGIC ---
-    function closeDialog() {
+    // --- ACTION://CLOSE INTEGRATION ---
+    function triggerClose() {
         const card = document.getElementById('mainCard');
-        card.style.transform = 'scale(0.85)';
+        
+        // Disable entrance animations and trigger exit animation
+        card.style.animation = 'none';
+        card.style.transform = 'scale(0.85) translateY(20px)';
         card.style.opacity = '0';
         
+        // Wait for CSS transition to finish, then send the action:// URL
         setTimeout(() => {
-            try {
-                // If you bound a JavascriptInterface named 'Android' in your Java code:
-                Android.closeDialog(); 
-            } catch (e) {
-                // Safe Fallback: Uses a custom URL scheme that your Java WebViewClient can intercept
-                window.location.href = "dpmods://close";
-                // Hide it visually if testing in browser
-                card.style.display = 'none'; 
-            }
+            window.location.href = "action://close";
         }, 300);
     }
 
@@ -315,12 +353,12 @@
 
     function toggleSearch() {
         const searchBox = document.getElementById('searchBar');
-        if (searchBox.style.display === 'block') {
-            searchBox.style.display = 'none';
+        if (searchBox.classList.contains('show')) {
+            searchBox.classList.remove('show');
             document.getElementById('searchInput').value = '';
             filterPosts();
         } else {
-            searchBox.style.display = 'block';
+            searchBox.classList.add('show');
             document.getElementById('searchInput').focus();
         }
     }
