@@ -6,12 +6,11 @@
     <title>DPMods Minimal UI</title>
     <style>
         :root {
-            --bg-color: #080808;
+            --bg-color: transparent;
             --card-bg: #0f0f0f;
             --text-primary: #ffffff;
             --text-secondary: #8e8e93;
             --accent-cyan: #00e5ff;
-            --accent-purple: #8a2be2;
             --accent-yellow: #ffcc00;
             --icon-bg: #1f1f1f;
             --border-subtle: #222222;
@@ -25,7 +24,7 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: transparent; /* Allows WebView background to show if needed */
+            background-color: var(--bg-color);
             color: var(--text-primary);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             display: flex;
@@ -35,13 +34,7 @@
             overflow: hidden;
         }
 
-        /* --- THE GLOWING CARD --- */
-        @keyframes border-glow {
-            0% { border-color: var(--accent-purple); box-shadow: 0 0 25px rgba(138, 43, 226, 0.4); }
-            50% { border-color: var(--accent-cyan); box-shadow: 0 0 25px rgba(0, 229, 255, 0.4); }
-            100% { border-color: var(--accent-purple); box-shadow: 0 0 25px rgba(138, 43, 226, 0.4); }
-        }
-
+        /* --- THE CLEAN FLOATING CARD --- */
         .dp-card {
             width: 92%;
             max-width: 400px;
@@ -52,9 +45,9 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            border: 2px solid var(--accent-purple);
-            animation: border-glow 4s infinite alternate ease-in-out;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8); /* Replaced stroke with a deep, clean shadow */
             position: relative;
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         /* --- ANIMATIONS --- */
@@ -63,7 +56,7 @@
             100% { opacity: 1; transform: translateY(0); }
         }
         .anim { opacity: 0; animation: slideUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-        .d-1 { animation-delay: 0.1s; } .d-2 { animation-delay: 0.2s; } .d-3 { animation-delay: 0.3s; }
+        .d-1 { animation-delay: 0.05s; } .d-2 { animation-delay: 0.1s; } .d-3 { animation-delay: 0.15s; }
 
         .squish { transition: transform 0.15s ease; cursor: pointer; }
         .squish:active { transform: scale(0.92); }
@@ -79,6 +72,7 @@
         .header svg { width: 24px; height: 24px; fill: var(--text-primary); }
         .header-title { font-weight: 700; font-size: 16px; letter-spacing: 0.5px; }
         
+        .btn-close { padding: 5px; margin: -5px; }
         .btn-close svg {
             stroke: #ff4d4d;
             stroke-width: 2.5;
@@ -96,16 +90,19 @@
         .scroll-content::-webkit-scrollbar { display: none; }
 
         /* --- PROFILE --- */
-        .profile { padding: 10px 25px 20px 25px; display: flex; gap: 20px; align-items: center; }
-        .avatar-container {
-            width: 80px; height: 80px;
-            border-radius: 50%;
-            padding: 3px;
-            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
-            display: flex; justify-content: center; align-items: center;
-        }
-        .avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--card-bg); }
+        .profile { padding: 10px 25px 20px 25px; display: flex; gap: 18px; align-items: center; }
         
+        /* 🔥 THE FIX: flex-shrink: 0 stops the image from ever turning into an oval! */
+        .avatar { 
+            width: 75px; 
+            height: 75px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            flex-shrink: 0; 
+            background: var(--icon-bg);
+        }
+        
+        .profile-info { flex: 1; }
         .profile-info h1 { margin: 0 0 5px 0; font-size: 22px; font-weight: 800; }
         .profile-info p { margin: 0 0 10px 0; color: var(--text-secondary); font-size: 13px; line-height: 1.4; }
         
@@ -124,7 +121,7 @@
         .btn-yt svg { width: 22px; height: 22px; }
         
         .btn-circle {
-            width: 48px; height: 48px; border-radius: 50%;
+            width: 46px; height: 46px; border-radius: 50%;
             background: var(--icon-bg); display: flex; justify-content: center; align-items: center;
             border: none; flex-shrink: 0;
         }
@@ -144,7 +141,10 @@
         .feed { padding: 20px 25px; }
         .post { display: flex; gap: 15px; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid var(--border-subtle); }
         .post:last-child { border-bottom: none; }
-        .p-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+        
+        /* User avatar in posts */
+        .p-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+        
         .p-content { flex: 1; }
         .p-header { display: flex; align-items: center; gap: 5px; margin-bottom: 6px; }
         .p-name { font-weight: 700; font-size: 14px; }
@@ -152,9 +152,19 @@
         .p-handle { color: var(--text-secondary); font-size: 13px; }
         .p-text { font-size: 14px; line-height: 1.5; margin: 0 0 12px 0; color: #e1e1e1;}
         
-        .yt-preview { width: 100%; border-radius: 15px; border: 1px solid var(--border-subtle); overflow: hidden; position: relative; background: #111; aspect-ratio: 16/9; display: flex; justify-content: center; align-items: center; cursor: pointer;}
-        .yt-play { width: 45px; height: 45px; background: rgba(0,0,0,0.6); border-radius: 50%; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
-        .yt-play svg { width: 20px; height: 20px; fill: white; margin-left: 3px; }
+        /* YouTube Preview Block */
+        .yt-preview { 
+            width: 100%; border-radius: 12px; border: 1px solid var(--border-subtle); 
+            overflow: hidden; position: relative; background: #111; 
+            aspect-ratio: 16/9; display: flex; flex-direction: column; justify-content: center; align-items: center; 
+        }
+        .yt-play { 
+            width: 50px; height: 50px; background: rgba(0,0,0,0.7); 
+            border-radius: 50%; display: flex; justify-content: center; align-items: center; 
+            backdrop-filter: blur(4px); margin-bottom: 10px;
+        }
+        .yt-play svg { width: 22px; height: 22px; fill: white; margin-left: 4px; }
+        .yt-title { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 1px;}
 
         .p-actions { display: flex; justify-content: space-between; padding-right: 20px; margin-top: 15px; }
         .p-actions svg { width: 18px; height: 18px; fill: none; stroke: var(--text-secondary); stroke-width: 2; }
@@ -163,8 +173,8 @@
         .bottom-nav { display: flex; justify-content: space-between; padding: 15px 35px; background: var(--card-bg); border-top: 1px solid var(--border-subtle); z-index: 10; }
         .bottom-nav svg { width: 24px; height: 24px; fill: none; stroke: var(--text-secondary); stroke-width: 2.2; }
         .bottom-nav svg.active { fill: var(--text-primary); stroke: var(--text-primary); }
-        .nav-dp { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; border: 2px solid transparent; opacity: 0.5; }
-        .nav-dp.active { opacity: 1; border-color: var(--accent-cyan); }
+        .nav-dp { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; opacity: 0.5; }
+        .nav-dp.active { opacity: 1; border: 2px solid var(--accent-cyan); }
 
     </style>
 </head>
@@ -187,9 +197,8 @@
     <div class="scroll-content">
         
         <div class="profile anim">
-            <div class="avatar-container">
-                <img class="avatar" src="https://i.pinimg.com/280x280_RS/bb/88/88/bb888815367bffe2bd9236700c069466.jpg" alt="DPMods">
-            </div>
+            <img class="avatar" src="https://i.pinimg.com/280x280_RS/bb/88/88/bb888815367bffe2bd9236700c069466.jpg" alt="DPMods">
+            
             <div class="profile-info">
                 <h1>DPMods</h1>
                 <p>Design + Code for Android Mod Menus. Join the VIP Community.</p>
@@ -220,7 +229,7 @@
 
         <div class="feed anim d-3" id="postFeed">
             
-            <div class="post dp-post" data-keyword="vip v2 login engine">
+            <div class="post dp-post" data-keyword="vip v2 login engine video">
                 <img class="p-avatar squish" src="https://i.pinimg.com/280x280_RS/bb/88/88/bb888815367bffe2bd9236700c069466.jpg" alt="DPMods">
                 <div class="p-content">
                     <div class="p-header">
@@ -231,8 +240,8 @@
                     <p class="p-text">Dropping the ALL NEW DPMODS VIP LOGIN ENGINE V2 🔥 Pure Java, Glassmorphism, and 100% Anti-Tamper.</p>
                     
                     <div class="yt-preview squish" onclick="openLink('https://youtube.com/@dpmods')">
-                        <span style="color:#555; font-weight:600; font-size:12px;">[ NEW VIDEO ]</span>
                         <div class="yt-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+                        <span class="yt-title">[ WATCH NEW VIDEO ]</span>
                     </div>
 
                     <div class="p-actions">
@@ -273,23 +282,27 @@
 </div>
 
 <script>
-    // Handles opening links
+    // --- OPEN LINKS EXTERNALLY ---
     function openLink(url) {
         window.open(url, '_blank');
-        // Java fallback if needed: window.location.href = "dpmods://" + url;
     }
 
-    // Shrinks and fades the card to close
+    // --- PROPER CLOSE ACTION LOGIC ---
     function closeDialog() {
         const card = document.getElementById('mainCard');
-        card.style.animation = 'none';
         card.style.transform = 'scale(0.85)';
         card.style.opacity = '0';
-        card.style.transition = 'all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
         
         setTimeout(() => {
-            // Android.closeDialog(); // Uncomment for native closing
-            card.style.display = 'none';
+            try {
+                // If you bound a JavascriptInterface named 'Android' in your Java code:
+                Android.closeDialog(); 
+            } catch (e) {
+                // Safe Fallback: Uses a custom URL scheme that your Java WebViewClient can intercept
+                window.location.href = "dpmods://close";
+                // Hide it visually if testing in browser
+                card.style.display = 'none'; 
+            }
         }, 300);
     }
 
