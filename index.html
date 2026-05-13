@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DPMods System Announcement</title>
+    <style>
+        /* --- THEME VARIABLES --- */
+        :root {
+            --bg-color: #090C12;
+            --card-bg: #121620;
+            --accent-cyan: #00E5FF;
+            --accent-pink: #F91880;
+            --text-main: #FFFFFF;
+            --text-muted: #8B949E;
+            --border-color: #2A3245;
+        }
+
+        /* --- RESET & BASE --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', Courier, monospace; /* Terminal vibe */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 20px;
+            /* Hide scrollbar for cleaner WebView look */
+            scrollbar-width: none; 
+            -ms-overflow-style: none;
+        }
+        body::-webkit-scrollbar { display: none; }
+
+        /* --- ANIMATIONS --- */
+        @keyframes slideUpFade {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 5px rgba(0, 229, 255, 0.2); }
+            50% { box-shadow: 0 0 15px rgba(0, 229, 255, 0.6); }
+            100% { box-shadow: 0 0 5px rgba(0, 229, 255, 0.2); }
+        }
+
+        @keyframes blinkCursor {
+            50% { border-color: transparent; }
+        }
+
+        /* --- LAYOUT & CARDS --- */
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            animation: slideUpFade 0.8s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .status-pill {
+            display: inline-block;
+            background: rgba(0, 229, 255, 0.1);
+            color: var(--accent-cyan);
+            border: 1px solid var(--accent-cyan);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            animation: pulseGlow 2s infinite;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--text-main);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Typing Effect */
+        .subtitle-container {
+            display: flex;
+            justify-content: center;
+        }
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 14px;
+            border-right: 2px solid var(--accent-cyan);
+            white-space: nowrap;
+            overflow: hidden;
+            animation: blinkCursor 0.7s step-end infinite;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: slideUpFade 0.8s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+        }
+
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.4s; }
+
+        .card-title {
+            color: var(--accent-cyan);
+            font-size: 16px;
+            margin-bottom: 12px;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .list-item {
+            color: var(--text-main);
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+            line-height: 1.5;
+        }
+
+        .list-item span {
+            color: var(--accent-pink);
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        /* --- BUTTONS --- */
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            display: block;
+            text-align: center;
+            padding: 14px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: var(--accent-cyan);
+            color: #000;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.95);
+            background: #00b3cc;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--accent-cyan);
+            border: 2px solid var(--accent-cyan);
+        }
+
+        .btn-outline:active {
+            transform: scale(0.95);
+            background: rgba(0, 229, 255, 0.1);
+        }
+
+        .footer {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 12px;
+            margin-top: 20px;
+            padding-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <div class="header">
+            <div class="status-pill">● LIVE SYSTEM TRANSMISSION</div>
+            <h1 class="title">DPMods Core V3</h1>
+            <div class="subtitle-container">
+                <div class="subtitle" id="typewriter"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">🚨 CRITICAL ANNOUNCEMENT</h2>
+            <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 15px;">
+                Welcome to the new DPMods Dynamic Interface. This message is being beamed directly from our GitHub servers to your device.
+            </p>
+            <div class="list-item"><span>►</span> New Aimbot Engine Deployed</div>
+            <div class="list-item"><span>►</span> Security Protocol Upgraded to V3.1</div>
+            <div class="list-item"><span>►</span> Device Bans have been reset for the new season.</div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">⚡ QUICK ACTIONS</h2>
+            <div class="btn-group">
+                <a href="https://t.me/dp_mods" class="btn btn-primary">Join Telegram Channel</a>
+                <a href="https://mratul.in" class="btn btn-outline">Visit Official Website</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            SECURE CONNECTION ESTABLISHED<br>
+            <span id="date-display"></span>
+        </div>
+
+    </div>
+
+    <script>
+        // 1. Typewriter Effect
+        const textToType = "Awaiting user command...";
+        let i = 0;
+        const speed = 50; 
+        
+        function typeWriter() {
+            if (i < textToType.length) {
+                document.getElementById("typewriter").innerHTML += textToType.charAt(i);
+                i++;
+                setTimeout(typeWriter, speed);
+            } else {
+                // Keep the cursor blinking by maintaining the class
+                document.getElementById("typewriter").style.borderRight = "2px solid var(--accent-cyan)";
+            }
+        }
+        
+        // Start typing after a small delay
+        setTimeout(typeWriter, 500);
+
+        // 2. Real-time Date Display
+        const dateDisplay = document.getElementById('date-display');
+        const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+        dateDisplay.innerText = new Date().toLocaleDateString('en-US', options).toUpperCase();
+    </script>
+
+</body>
+</html>
