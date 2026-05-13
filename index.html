@@ -7,7 +7,7 @@
     <style>
         /* --- THEME VARIABLES --- */
         :root {
-            --bg-color: transparent; /* Must be transparent to see Java card */
+            --bg-color: transparent; 
             --card-bg: #161b22;      
             --accent-cyan: #00E5FF;  
             --accent-pink: #F91880;  
@@ -28,7 +28,6 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             padding: 10px;
-            /* Make body exactly height of viewport to prevent ugly scrolling */
             min-height: 100vh; 
             display: flex;
             flex-direction: column;
@@ -85,14 +84,14 @@
             border-radius: 30px;
             font-size: 11px;
             font-weight: bold;
-            margin-top: 10px;
+            margin-top: 5px;
             margin-bottom: 20px;
             letter-spacing: 1px;
             animation: pulseGlow 2s infinite;
         }
 
         .title {
-            font-size: 26px;
+            font-size: 24px;
             font-weight: bold;
             color: #FFFFFF;
             margin-bottom: 8px;
@@ -115,11 +114,11 @@
             animation: blinkCursor 0.8s step-end infinite;
         }
 
-        /* --- INNER CARD (ANNOUNCEMENT) --- */
+        /* --- INNER CARDS --- */
         .card {
             background: var(--card-bg);
             border-radius: 15px;
-            padding: 25px;
+            padding: 20px;
             width: 100%;
             margin-bottom: 15px;
             opacity: 0;
@@ -131,7 +130,7 @@
 
         .card-title {
             color: var(--accent-cyan);
-            font-size: 15px;
+            font-size: 14px;
             font-weight: bold;
             margin-bottom: 15px;
             border-bottom: 1px dashed var(--border-dashed);
@@ -139,17 +138,10 @@
             letter-spacing: 1px;
         }
 
-        .body-text {
-            font-size: 13px;
-            color: var(--text-muted);
-            line-height: 1.8;
-            margin-bottom: 20px;
-        }
-
         .list-item {
             color: var(--text-main);
             font-size: 13px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             display: flex;
             align-items: flex-start;
             line-height: 1.6;
@@ -159,6 +151,32 @@
             color: var(--accent-pink);
             margin-right: 12px;
             font-size: 14px;
+        }
+
+        /* --- SOCIAL BUTTONS --- */
+        .social-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn-social {
+            display: block;
+            text-align: center;
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--accent-cyan);
+            border: 1px solid var(--accent-cyan);
+            background: rgba(0, 229, 255, 0.05);
+            transition: all 0.2s ease;
+        }
+
+        .btn-social:active {
+            transform: scale(0.95);
+            background: rgba(0, 229, 255, 0.2);
         }
 
         /* --- CLOSE BUTTON --- */
@@ -173,7 +191,7 @@
             text-decoration: none;
             font-weight: bold;
             font-size: 14px;
-            margin-top: auto; /* Pushes button to bottom */
+            margin-top: auto; 
             margin-bottom: 10px;
             transition: all 0.2s ease;
             opacity: 0;
@@ -200,24 +218,27 @@
 
         <div class="card">
             <div class="card-title">🚨 CRITICAL ANNOUNCEMENT</div>
-            
-            <div class="body-text">
-                Welcome to the new DPMods Dynamic Interface. This message is being beamed directly from our GitHub servers to your device.
-            </div>
-
             <div class="list-item"><span>►</span> New Aimbot Engine Deployed</div>
             <div class="list-item"><span>►</span> Security Protocol Upgraded to V3.1</div>
             <div class="list-item"><span>►</span> Device Bans have been reset for the new season.</div>
+        </div>
+
+        <div class="card" style="animation-delay: 0.3s;">
+            <div class="card-title">🔗 CONNECT WITH US</div>
+            <div class="social-grid">
+                <a href="https://t.me/dp_mods" class="btn-social">TELEGRAM</a>
+                <a href="https://wa.me/1234567890" class="btn-social">WHATSAPP</a>
+                <a href="https://www.tiktok.com/@yourusername" class="btn-social">TIKTOK</a>
+                <a href="https://www.instagram.com/yourusername" class="btn-social">INSTAGRAM</a>
+            </div>
         </div>
 
         <a href="action://close" class="btn-close">CLOSE ANNOUNCEMENT</a>
     </div>
 
     <script>
-        // Typewriter Effect
         const textToType = "Awaiting user command...";
         let i = 0;
-        
         function typeWriter() {
             if (i < textToType.length) {
                 document.getElementById("typewriter").innerHTML += textToType.charAt(i);
@@ -225,7 +246,6 @@
                 setTimeout(typeWriter, 50);
             }
         }
-        
         setTimeout(typeWriter, 400);
     </script>
 
