@@ -3,50 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DPMods System Transmission</title>
+    <title>DPMods Profile UI</title>
     <style>
-        /* --- THEME VARIABLES --- */
         :root {
-            --bg-color: transparent; 
-            --card-bg: #161b22;      
-            --accent-cyan: #00E5FF;  
-            --accent-pink: #F91880;  
-            --text-main: #E6EAD3;
-            --text-muted: #8B949E;
-            --border-dashed: #2A3245;
+            --bg-color: #121212;
+            --text-primary: #ffffff;
+            --text-secondary: #888888;
+            --accent-yellow: #f5c518;
+            --btn-bg: #ffffff;
+            --btn-text: #000000;
+            --border-color: #2a2a2a;
+            --icon-bg: #1c1c1c;
         }
 
-        /* --- RESET & BASE --- */
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
-            font-family: 'Courier New', Courier, monospace;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
+            margin: 0;
+            padding: 0;
             background-color: var(--bg-color);
-            color: var(--text-main);
-            padding: 10px;
-            min-height: 100vh; 
-            display: flex;
-            flex-direction: column;
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             overflow-x: hidden;
-            scrollbar-width: none; 
-        }
-        body::-webkit-scrollbar { display: none; }
-
-        /* Hacker Grid Background */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background-image: 
-                linear-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 229, 255, 0.05) 1px, transparent 1px);
-            background-size: 20px 20px;
-            z-index: -1;
-            pointer-events: none;
         }
 
         /* --- ANIMATIONS --- */
@@ -55,199 +36,277 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes pulseGlow {
-            0% { box-shadow: 0 0 5px rgba(0, 229, 255, 0.2); }
-            50% { box-shadow: 0 0 20px rgba(0, 229, 255, 0.8); }
-            100% { box-shadow: 0 0 5px rgba(0, 229, 255, 0.2); }
+        .anim-element {
+            opacity: 0;
+            animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        @keyframes blinkCursor {
-            50% { border-color: transparent; }
-        }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
 
-        /* --- LAYOUT & HEADER --- */
-        .container {
-            width: 100%;
+        /* Squishy Button Physics */
+        .squish { transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .squish:active { transform: scale(0.92); }
+
+        /* --- LAYOUT --- */
+        .app-container {
+            max-width: 500px;
+            margin: 0 auto;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
+            border-left: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+        }
+
+        /* --- HEADER --- */
+        .header {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            flex-grow: 1;
-            animation: slideUpFade 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            background: rgba(18, 18, 18, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 100;
         }
 
-        .status-pill {
-            display: inline-block;
-            background: rgba(0, 229, 255, 0.05);
-            color: var(--accent-cyan);
-            border: 1px solid var(--accent-cyan);
-            padding: 6px 20px;
-            border-radius: 30px;
-            font-size: 11px;
-            font-weight: bold;
-            margin-top: 5px;
-            margin-bottom: 20px;
-            letter-spacing: 1px;
-            animation: pulseGlow 2s infinite;
+        .header svg { width: 24px; height: 24px; fill: var(--text-primary); }
+        .header-title { font-weight: 700; font-size: 16px; letter-spacing: 0.5px; }
+
+        /* --- PROFILE INFO --- */
+        .profile-section { padding: 15px 20px; }
+        
+        .profile-top {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 15px;
         }
 
-        .title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #FFFFFF;
-            margin-bottom: 8px;
-            letter-spacing: 2px;
-            text-align: center;
-            text-shadow: 0 0 10px rgba(255,255,255,0.2);
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--border-color);
         }
 
-        .subtitle-container {
+        .profile-details h1 {
+            margin: 0 0 5px 0;
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .profile-details p {
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        /* Tags */
+        .tags-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .tag {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .tag-dark { background: var(--icon-bg); color: var(--text-secondary); }
+        .tag-yellow { background: var(--accent-yellow); color: #000; }
+
+        /* --- ACTION BUTTONS --- */
+        .action-row {
+            display: flex;
+            gap: 15px;
+            padding: 0 20px 20px 20px;
+        }
+
+        .btn-follow {
+            flex: 1;
+            background: var(--btn-bg);
+            color: var(--btn-text);
+            border: none;
+            border-radius: 25px;
+            font-size: 15px;
+            font-weight: 700;
+            padding: 12px 0;
+            cursor: pointer;
+        }
+
+        .btn-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background: transparent;
             display: flex;
             justify-content: center;
-            margin-bottom: 25px;
+            align-items: center;
+            cursor: pointer;
         }
-        .subtitle {
-            color: var(--text-muted);
-            font-size: 13px;
-            border-right: 2px solid var(--accent-cyan);
-            white-space: nowrap;
-            overflow: hidden;
-            animation: blinkCursor 0.8s step-end infinite;
-        }
+        .btn-icon svg { width: 20px; height: 20px; fill: none; stroke: var(--text-primary); stroke-width: 2; }
 
-        /* --- INNER CARDS --- */
-        .card {
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 20px;
-            width: 100%;
-            margin-bottom: 15px;
-            opacity: 0;
-            animation: slideUpFade 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
-            animation-delay: 0.2s;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .card-title {
-            color: var(--accent-cyan);
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            border-bottom: 1px dashed var(--border-dashed);
-            padding-bottom: 12px;
-            letter-spacing: 1px;
-        }
-
-        .list-item {
-            color: var(--text-main);
-            font-size: 13px;
-            margin-bottom: 12px;
+        /* --- TABS --- */
+        .tabs {
             display: flex;
-            align-items: flex-start;
-            line-height: 1.6;
+            border-bottom: 1px solid var(--border-color);
         }
 
-        .list-item span {
-            color: var(--accent-pink);
-            margin-right: 12px;
-            font-size: 14px;
-        }
-
-        /* --- SOCIAL BUTTONS --- */
-        .social-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .btn-social {
-            display: block;
+        .tab {
+            flex: 1;
             text-align: center;
-            padding: 12px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: bold;
-            color: var(--accent-cyan);
-            border: 1px solid var(--accent-cyan);
-            background: rgba(0, 229, 255, 0.05);
-            transition: all 0.2s ease;
+            padding: 15px 0;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            position: relative;
         }
 
-        .btn-social:active {
-            transform: scale(0.95);
-            background: rgba(0, 229, 255, 0.2);
+        .tab.active { color: var(--text-primary); }
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 3px;
+            background: var(--text-primary);
+            border-radius: 3px 3px 0 0;
         }
 
-        /* --- CLOSE BUTTON --- */
-        .btn-close {
-            display: block;
+        /* --- FEED / POST --- */
+        .feed { flex: 1; padding: 20px; }
+        
+        .post { display: flex; gap: 15px; }
+        .post-avatar { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; }
+        
+        .post-content { flex: 1; }
+        .post-header { display: flex; align-items: center; gap: 5px; margin-bottom: 8px; }
+        .post-name { font-weight: 700; font-size: 15px; }
+        .post-badge { width: 14px; height: 14px; fill: var(--accent-yellow); }
+        .post-handle { color: var(--text-secondary); font-size: 14px; }
+        
+        .post-text { font-size: 15px; line-height: 1.5; margin: 0 0 15px 0; }
+        
+        .post-image {
             width: 100%;
-            background: var(--accent-cyan);
-            color: #000000;
-            text-align: center;
-            padding: 16px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 14px;
-            margin-top: auto; 
-            margin-bottom: 10px;
-            transition: all 0.2s ease;
-            opacity: 0;
-            animation: slideUpFade 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
-            animation-delay: 0.4s;
-            box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 15px;
         }
 
-        .btn-close:active {
-            transform: scale(0.95);
-            background: #00b3cc;
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            padding-right: 20px;
         }
+        .post-actions svg { width: 18px; height: 18px; fill: none; stroke: var(--text-secondary); stroke-width: 2; cursor: pointer; }
+
+        /* --- BOTTOM NAV --- */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 20px;
+            border-top: 1px solid var(--border-color);
+            background: rgba(18, 18, 18, 0.95);
+            position: sticky;
+            bottom: 0;
+        }
+        .bottom-nav svg { width: 26px; height: 26px; fill: none; stroke: var(--text-secondary); stroke-width: 2; cursor: pointer; }
+        .bottom-nav svg.active { fill: var(--text-primary); stroke: var(--text-primary); }
+        .nav-avatar { width: 28px; height: 28px; border-radius: 50%; opacity: 0.6; }
 
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="status-pill">● LIVE SYSTEM TRANSMISSION</div>
-        <h1 class="title">DPMODS CORE V3</h1>
-        <div class="subtitle-container">
-            <div class="subtitle" id="typewriter"></div>
-        </div>
+<div class="app-container">
 
-        <div class="card">
-            <div class="card-title">🚨 CRITICAL ANNOUNCEMENT</div>
-            <div class="list-item"><span>►</span> New Aimbot Engine Deployed</div>
-            <div class="list-item"><span>►</span> Security Protocol Upgraded to V3.1</div>
-            <div class="list-item"><span>►</span> Device Bans have been reset for the new season.</div>
-        </div>
-
-        <div class="card" style="animation-delay: 0.3s;">
-            <div class="card-title">🔗 CONNECT WITH US</div>
-            <div class="social-grid">
-                <a href="https://t.me/dp_mods" class="btn-social">TELEGRAM</a>
-                <a href="https://wa.me/1234567890" class="btn-social">WHATSAPP</a>
-                <a href="https://www.tiktok.com/@yourusername" class="btn-social">TIKTOK</a>
-                <a href="https://www.instagram.com/yourusername" class="btn-social">INSTAGRAM</a>
-            </div>
-        </div>
-
-        <a href="action://close" class="btn-close">CLOSE ANNOUNCEMENT</a>
+    <div class="header">
+        <svg class="squish" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        <div class="header-title">@dpmods</div>
+        <svg class="squish" viewBox="0 0 24 24"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
     </div>
 
-    <script>
-        const textToType = "Awaiting user command...";
-        let i = 0;
-        function typeWriter() {
-            if (i < textToType.length) {
-                document.getElementById("typewriter").innerHTML += textToType.charAt(i);
-                i++;
-                setTimeout(typeWriter, 50);
-            }
-        }
-        setTimeout(typeWriter, 400);
-    </script>
+    <div class="profile-section anim-element">
+        <div class="profile-top">
+            <img class="avatar" src="https://i.pinimg.com/280x280_RS/bb/88/88/bb888815367bffe2bd9236700c069466.jpg" alt="Profile">
+            <div class="profile-details">
+                <h1>DPMods</h1>
+                <p>Design + code for Android Mod Menus, UI/UX<br>India, He/him</p>
+                <div class="tags-row">
+                    <span class="tag tag-dark">dpmods.com</span>
+                    <span class="tag tag-yellow">💛 VIP Creator</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="action-row anim-element delay-1">
+        <button class="btn-follow squish">Follow</button>
+        <button class="btn-icon squish">
+            <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+        </button>
+        <button class="btn-icon squish">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+        </button>
+    </div>
+
+    <div class="tabs anim-element delay-2">
+        <div class="tab active squish">Posts</div>
+        <div class="tab squish">Replies</div>
+        <div class="tab squish">Media</div>
+    </div>
+
+    <div class="feed anim-element delay-3">
+        <div class="post">
+            <img class="post-avatar squish" src="https://i.pinimg.com/280x280_RS/bb/88/88/bb888815367bffe2bd9236700c069466.jpg" alt="Post Avatar">
+            <div class="post-content">
+                <div class="post-header">
+                    <span class="post-name">DPMods</span>
+                    <svg class="post-badge" viewBox="0 0 24 24"><path d="M12 2l3.09 3.09L19.5 5.5l-1.09 4.41L21 13l-2.59 3.09.5 4.41-4.41-.5L12 22l-3.09-3.09L4.5 18.5l1.09-4.41L3 11l2.59-3.09-.5-4.41 4.41.5L12 2z"/></svg>
+                    <span class="post-handle">@dpmods · 3m</span>
+                </div>
+                <p class="post-text">
+                    Dropping the new V2 Auth Engine today.<br><br>
+                    Love this tiny detail of converting HEX with transparency into rgba automatically. Just a cool little detail 👌
+                </p>
+                <div class="post-image" style="height: 180px; background: linear-gradient(135deg, #1c1c1c, #2a2a2a); display:flex; align-items:center; justify-content:center; color:#555;">
+                    [ Image Attachment ]
+                </div>
+
+                <div class="post-actions">
+                    <svg class="squish" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                    <svg class="squish" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                    <svg class="squish" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                    <svg class="squish" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav anim-element delay-4">
+        <svg class="active squish" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        <svg class="squish" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <svg class="squish" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+        <img class="nav-avatar squish" src="https://i.pinimg.com/280x280_RS/bb/88/88/bb888815367bffe2bd9236700c069466.jpg" alt="Profile">
+    </div>
+
+</div>
 
 </body>
 </html>
