@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DPMods Dialog UI</title>
+    <title>DPMods Cyber ID</title>
     <style>
         :root {
-            --card-bg: #0d0d0d;
-            --text-primary: #ffffff;
-            --text-secondary: #8e8e93;
-            --accent-cyan: #00e5ff;
-            --accent-yellow: #ffcc00;
-            --icon-bg: #1a1a1a;
-            --border-subtle: #222222;
+            --bg-metal: #18181c;
+            --neon-purple: #d500ff;
+            --neon-cyan: #00e5ff;
+            --text-main: #ffffff;
+            --text-dim: #a0a0a8;
+            --font-sys: 'Courier New', Courier, monospace;
         }
 
         * {
@@ -20,374 +19,321 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* --- THE DIALOG BACKDROP --- */
         body {
             margin: 0;
             padding: 0;
-            /* Creates a dark, blurred overlay over the transparent Java Dialog */
-            background-color: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            color: var(--text-primary);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            /* The blurred backdrop over your transparent Java WebView */
+            background-color: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: var(--text-main);
+            font-family: var(--font-sys);
             width: 100vw;
             height: 100vh;
             overflow: hidden;
             display: flex;
             justify-content: center;
-            align-items: center; /* Centers the dialog perfectly */
+            align-items: center;
         }
 
-        /* --- THE FLOATING DIALOG CARD --- */
-        .dp-card {
+        /* --- THE CYBER FRAME --- */
+        .cyber-card {
             width: 90%;
             max-width: 420px;
             height: 85vh;
-            max-height: 750px;
-            background-color: var(--card-bg);
-            /* Restored the beautiful dialog corner radius */
-            border-radius: 28px;
-            display: flex;
-            flex-direction: column;
+            max-height: 700px;
+            background-color: var(--bg-metal);
             position: relative;
-            /* Deep shadow to make it pop off the background */
-            box-shadow: 0 25px 60px rgba(0,0,0,0.8), 0 0 1px rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.05);
-            /* Ensure inner content respects the border radius */
-            overflow: hidden; 
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            /* Outer angled corners matching the reference */
+            clip-path: polygon(8% 0, 100% 0, 100% 92%, 92% 100%, 0 100%, 0 8%);
+            box-shadow: inset 0 0 0 1px #333;
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.9));
+            opacity: 0;
+            transform: scale(0.95) translateY(20px);
+            animation: bootUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
         }
 
-        /* --- ADVANCED ANIMATIONS --- */
-        @keyframes dialogPop {
-            0% { opacity: 0; transform: scale(0.95) translateY(15px); }
+        @keyframes bootUp {
             100% { opacity: 1; transform: scale(1) translateY(0); }
         }
-        
-        @keyframes shimmer {
-            0% { background-position: -200% center; }
-            100% { background-position: 200% center; }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 20px rgba(213, 0, 255, 0.5), inset 0 0 30px rgba(213, 0, 255, 0.4); }
+            50% { box-shadow: 0 0 35px rgba(213, 0, 255, 0.8), inset 0 0 50px rgba(213, 0, 255, 0.6); }
+            100% { box-shadow: 0 0 20px rgba(213, 0, 255, 0.5), inset 0 0 30px rgba(213, 0, 255, 0.4); }
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        /* --- THE CENTRAL PORTRAIT --- */
+        .portrait-wrapper {
+            position: absolute;
+            top: 25px;
+            left: 45px;
+            right: 45px;
+            bottom: 150px;
+            background: url('https://raw.githubusercontent.com/DPModsYT/webbydpmods/refs/heads/main/IMG_20260514_135013.jpg') center/cover no-repeat;
+            border: 2px solid var(--neon-purple);
+            animation: pulseGlow 3s infinite ease-in-out;
+            z-index: 1;
+            /* Creates a slight curved edge inside the frame */
+            border-radius: 10px;
         }
 
-        .anim { opacity: 0; animation: dialogPop 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-        .d-1 { animation-delay: 0.05s; } 
-        .d-2 { animation-delay: 0.1s; } 
-        .d-3 { animation-delay: 0.15s; }
-
-        .squish { transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer; }
-        .squish:active { transform: scale(0.88); }
-
-        /* --- HEADER --- */
-        .header {
+        /* --- HARDWARE ACCENTS --- */
+        .hardware-screws {
+            position: absolute;
+            top: 20px;
+            left: 15px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 25px;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 5;
+        }
+        .screw {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: #aaa;
+            box-shadow: inset 1px 1px 3px #000, 0 0 2px rgba(255,255,255,0.2);
+        }
+
+        /* Top Left QR/Hologram placeholders */
+        .qr-placeholder {
+            position: absolute;
+            top: 60px;
+            left: 10px;
+            width: 25px; height: 25px;
+            background: repeating-linear-gradient(45deg, #fff, #fff 2px, transparent 2px, transparent 4px);
+            border: 1px solid #fff;
+            opacity: 0.8;
+            z-index: 5;
+        }
+        .holo-placeholder {
+            position: absolute;
+            top: 95px;
+            left: 10px;
+            width: 25px; height: 25px;
+            background: linear-gradient(135deg, #ccc, #fff, #666);
+            opacity: 0.6;
+            z-index: 5;
+            border-radius: 2px;
+        }
+
+        /* --- VERTICAL BRANDING (LEFT EDGE) --- */
+        .vertical-brand {
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%) rotate(180deg);
+            writing-mode: vertical-rl;
+            color: transparent;
+            -webkit-text-stroke: 1px var(--neon-purple);
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 5px;
+            text-shadow: 0 0 15px var(--neon-purple);
+            z-index: 5;
+        }
+
+        /* --- RIGHT EDGE DATA SPECS --- */
+        .right-specs {
+            position: absolute;
+            right: 8px;
+            top: 30px;
+            display: flex;
+            gap: 20px;
+            writing-mode: vertical-rl;
+            z-index: 5;
+        }
+        .spec-block {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .spec-label {
+            color: var(--text-dim);
+            font-size: 8px;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+        .spec-value {
+            color: var(--text-main);
+            font-size: 10px;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        /* --- BOTTOM LEFT ANGLED PANEL --- */
+        .name-panel {
+            position: absolute;
+            bottom: 25px;
+            left: 0;
+            background: rgba(24, 24, 28, 0.95);
+            backdrop-filter: blur(5px);
+            padding: 15px 30px 15px 20px;
+            border: 2px solid var(--neon-purple);
+            border-left: none;
+            /* Angled cut on top right */
+            clip-path: polygon(0 0, 85% 0, 100% 25%, 100% 100%, 0 100%);
             z-index: 10;
-            background: var(--card-bg);
-            border-bottom: 1px solid var(--border-subtle);
         }
-        .header svg { width: 24px; height: 24px; fill: var(--text-primary); }
-        .header-title { font-weight: 700; font-size: 18px; letter-spacing: 0.5px; }
-        
-        .btn-close { padding: 5px; margin: -5px; }
-        .btn-close svg {
-            stroke: #ff4d4d;
-            stroke-width: 2.5;
-            stroke-linecap: round;
-            fill: none;
-            width: 22px; height: 22px;
+        .name-label { color: var(--neon-purple); font-size: 10px; font-weight: bold; letter-spacing: 2px; margin-bottom: 2px; }
+        .name-value { color: var(--text-main); font-size: 28px; font-weight: 900; letter-spacing: 1px; margin-bottom: 12px; }
+        .mission-label { color: var(--neon-purple); font-size: 9px; font-weight: bold; letter-spacing: 2px; margin-bottom: 2px; }
+        .mission-value { color: var(--text-main); font-size: 13px; font-weight: bold; letter-spacing: 1px; }
+
+        /* --- BOTTOM RIGHT CROSSHAIR LOGO --- */
+        .cyber-logo {
+            position: absolute;
+            bottom: 30px;
+            right: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            z-index: 10;
+        }
+        .crosshair {
+            width: 45px; height: 45px;
+            border: 2px solid var(--text-main);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 0 15px var(--neon-purple);
+        }
+        .crosshair::before {
+            content: ''; position: absolute;
+            top: -12px; bottom: -12px; left: 50%; width: 2px; background: var(--text-main); transform: translateX(-50%);
+        }
+        .crosshair::after {
+            content: ''; position: absolute;
+            left: -12px; right: -12px; top: 50%; height: 2px; background: var(--text-main); transform: translateY(-50%);
+        }
+        .crosshair-center {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 15px; height: 15px;
+            border: 2px solid var(--neon-purple);
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+        .logo-text {
+            font-size: 14px; font-weight: 900; letter-spacing: 3px;
+            text-shadow: 0 0 8px var(--neon-purple);
         }
 
-        /* --- SCROLL AREA --- */
-        .scroll-content {
-            flex: 1;
-            overflow-y: auto;
-            overflow-x: hidden;
-            scroll-behavior: smooth;
-        }
-        .scroll-content::-webkit-scrollbar { display: none; }
-
-        /* --- PROFILE --- */
-        .profile { padding: 15px 25px 20px 25px; display: flex; gap: 18px; align-items: center; }
-        
-        .avatar { 
-            width: 80px; 
-            height: 80px; 
-            border-radius: 50%; 
-            object-fit: cover; 
-            flex-shrink: 0; 
-            background: var(--icon-bg);
-            border: 2px solid transparent;
-            background-image: linear-gradient(var(--card-bg), var(--card-bg)), linear-gradient(135deg, var(--accent-cyan), #b400ff);
-            background-origin: border-box;
-            background-clip: content-box, border-box;
-        }
-        
-        .profile-info { flex: 1; }
-        .profile-info h1 { margin: 0 0 2px 0; font-size: 24px; font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px;}
-        
-        .sub-count {
-            font-size: 13px;
-            font-weight: 600;
-            color: #ff4d4d;
-            background: rgba(255, 77, 77, 0.1);
-            padding: 3px 8px;
-            border-radius: 12px;
-            letter-spacing: 0.5px;
+        /* --- BOTTOM CENTER META & BUTTON --- */
+        .meta-text {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 7px;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            white-space: nowrap;
+            z-index: 5;
         }
 
-        .profile-info p { margin: 5px 0 10px 0; color: var(--text-secondary); font-size: 14px; line-height: 1.4; }
-        
-        .tags { display: flex; gap: 8px; flex-wrap: wrap; }
-        .tag { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; background: var(--icon-bg); color: var(--text-secondary); }
-        .tag.vip { 
-            background: var(--accent-yellow); 
-            color: #000; 
-            box-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
-        }
-
-        /* --- BUTTONS --- */
-        .actions { display: flex; gap: 12px; padding: 0 25px 20px 25px; }
-        .btn-yt {
-            flex: 1; color: #000000;
-            border: none; border-radius: 30px; font-size: 15px; font-weight: 800;
-            display: flex; justify-content: center; align-items: center; gap: 8px;
-            padding: 12px 0;
-            background: linear-gradient(90deg, #ffffff 0%, #f0f0f0 25%, #ffffff 50%);
-            background-size: 200% auto;
-            animation: shimmer 3s infinite linear;
-        }
-        .btn-yt svg { width: 22px; height: 22px; }
-        
-        .btn-circle {
-            width: 46px; height: 46px; border-radius: 50%;
-            background: var(--icon-bg); display: flex; justify-content: center; align-items: center;
-            border: none; flex-shrink: 0;
-            box-shadow: inset 0 2px 4px rgba(255,255,255,0.05);
-        }
-        .btn-circle svg { width: 20px; height: 20px; fill: var(--text-primary); }
-
-        /* --- SEARCH --- */
-        .search-box { 
-            padding: 0 25px 15px 25px; 
-            max-height: 0; 
-            opacity: 0; 
-            overflow: hidden; 
-            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-        .search-box.show { max-height: 60px; opacity: 1; }
-        .search-input { width: 100%; padding: 12px 18px; border-radius: 20px; border: 1px solid var(--border-subtle); background: var(--icon-bg); color: white; outline: none; font-size: 14px; transition: border 0.3s; }
-        .search-input:focus { border-color: var(--accent-cyan); }
-
-        /* --- TABS --- */
-        .tabs { display: flex; border-bottom: 1px solid var(--border-subtle); padding: 0 10px; }
-        .tab { flex: 1; text-align: center; padding: 15px 0; color: var(--text-secondary); font-weight: 700; font-size: 14px; position: relative; transition: color 0.3s;}
-        .tab.active { color: var(--text-primary); }
-        .tab.active::after { 
-            content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); 
-            width: 40px; height: 3px; background: var(--accent-cyan); border-radius: 3px 3px 0 0; 
-            box-shadow: 0 -2px 8px rgba(0, 229, 255, 0.5);
-        }
-
-        /* --- FEED --- */
-        .feed { padding: 20px 25px; }
-        .post { display: flex; gap: 15px; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid var(--border-subtle); }
-        .post:last-child { border-bottom: none; }
-        
-        .p-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
-        
-        .p-content { flex: 1; }
-        .p-header { display: flex; align-items: center; gap: 5px; margin-bottom: 6px; }
-        .p-name { font-weight: 700; font-size: 14px; }
-        .p-badge { width: 14px; height: 14px; fill: var(--accent-cyan); }
-        .p-handle { color: var(--text-secondary); font-size: 13px; }
-        .p-text { font-size: 14px; line-height: 1.5; margin: 0 0 12px 0; color: #e1e1e1;}
-        
-        .yt-preview { 
-            width: 100%; border-radius: 12px; border: 1px solid var(--border-subtle); 
-            overflow: hidden; position: relative; background: #111; 
-            aspect-ratio: 16/9; display: flex; flex-direction: column; justify-content: center; align-items: center; 
+        .init-btn {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: transparent;
+            border: 1px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            padding: 8px 15px;
+            font-family: var(--font-sys);
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 2px;
             cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 0 10px rgba(0,229,255,0.3);
+            z-index: 20;
         }
-        .yt-play { 
-            width: 50px; height: 50px; background: rgba(0,0,0,0.7); 
-            border-radius: 50%; display: flex; justify-content: center; align-items: center; 
-            backdrop-filter: blur(4px); margin-bottom: 10px;
-            animation: pulse 2.5s infinite ease-in-out;
+        .init-btn:active {
+            background: var(--neon-cyan);
+            color: #000;
+            transform: translateX(-50%) scale(0.95);
         }
-        .yt-play svg { width: 22px; height: 22px; fill: white; margin-left: 4px; }
-        .yt-title { font-size: 12px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 1px;}
-
-        .p-actions { display: flex; justify-content: space-between; padding-right: 20px; margin-top: 15px; }
-        .p-actions svg { width: 18px; height: 18px; fill: none; stroke: var(--text-secondary); stroke-width: 2; transition: stroke 0.2s;}
-        .p-actions svg:active { stroke: var(--text-primary); }
-
-        /* --- BOTTOM NAV --- */
-        .bottom-nav { display: flex; justify-content: space-between; padding: 15px 35px; background: rgba(13,13,13,0.98); backdrop-filter: blur(10px); border-top: 1px solid var(--border-subtle); z-index: 10; }
-        .bottom-nav svg { width: 24px; height: 24px; fill: none; stroke: var(--text-secondary); stroke-width: 2.2; transition: all 0.2s;}
-        .bottom-nav svg.active { fill: var(--text-primary); stroke: var(--text-primary); }
-        .nav-dp { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; opacity: 0.5; transition: all 0.2s;}
-        .nav-dp.active { opacity: 1; border: 2px solid var(--accent-cyan); box-shadow: 0 0 8px rgba(0, 229, 255, 0.4); }
 
     </style>
 </head>
 <body>
 
-<div class="dp-card anim" id="mainCard">
+<div class="cyber-card" id="mainCard">
+    
+    <div class="portrait-wrapper"></div>
 
-    <div class="header">
-        <svg class="squish" onclick="triggerClose()" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-        <div class="header-title">@dpmods</div>
-        <div class="btn-close squish" onclick="triggerClose()">
-            <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    <div class="hardware-screws">
+        <div class="screw"></div>
+        <div class="screw"></div>
+    </div>
+    <div class="qr-placeholder"></div>
+    <div class="holo-placeholder"></div>
+
+    <div class="vertical-brand">DPMODS VIP</div>
+
+    <div class="right-specs">
+        <div class="spec-block">
+            <span class="spec-label">ID NUMBER</span>
+            <span class="spec-value">DP-101101</span>
+        </div>
+        <div class="spec-block">
+            <span class="spec-label">ADDRESS</span>
+            <span class="spec-value">127.0.0.1_ROOT</span>
+        </div>
+        <div class="spec-block">
+            <span class="spec-label">ISSUE DATE</span>
+            <span class="spec-value">2026.MAY.14</span>
+        </div>
+        <div class="spec-block">
+            <span class="spec-label">EXPIRED DATE</span>
+            <span class="spec-value">LIFETIME_VIP</span>
         </div>
     </div>
 
-    <div class="search-box" id="searchBar">
-        <input type="text" class="search-input" id="searchInput" placeholder="Search posts, videos..." onkeyup="filterPosts()">
-    </div>
-
-    <div class="scroll-content">
+    <div class="name-panel">
+        <div class="name-label">NAME</div>
+        <div class="name-value">DPMODS:</div>
+        <div class="mission-label">MISSION CODE</div>
+        <div class="mission-value">#AWAKEN_ENGINE</div>
         
-        <div class="profile anim d-1">
-            <img class="avatar" src="https://i.pinimg.com/280x280_RS/bb/88/88/bb888815367bffe2bd9236700c069466.jpg" alt="DPMods">
-            <div class="profile-info">
-                <h1>DPMods <span class="sub-count">10.5K+ Subs</span></h1>
-                <p>Design + Code for Android Mod Menus. Join the VIP Community.</p>
-                <div class="tags">
-                    <span class="tag">dpmods.com</span>
-                    <span class="tag vip">👑 VIP Creator</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="actions anim d-2">
-            <button class="btn-yt squish" onclick="openLink('https://youtube.com/@dpmods')">
-                <svg viewBox="0 0 24 24" fill="#ff0000"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
-                Subscribe
-            </button>
-            <button class="btn-circle squish" onclick="openLink('https://t.me/dp_mods')">
-                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.21-1.12-.33-1.08-.7.02-.19.27-.39.75-.6 2.93-1.28 4.88-2.12 5.86-2.53 2.77-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .24z"/></svg>
-            </button>
-            <button class="btn-circle squish" onclick="openLink('https://dpmods.com')">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="#ffffff"/></svg>
-            </button>
-        </div>
-
-        <div class="tabs anim d-3">
-            <div class="tab active squish" onclick="switchTab(this)">Latest Videos</div>
-            <div class="tab squish" onclick="switchTab(this)">Updates</div>
-        </div>
-
-        <div class="feed" id="postFeed">
-            
-            <div class="post dp-post anim d-3" data-keyword="vip v2 login engine video">
-                <img class="p-avatar squish" src="https://i.pinimg.com/280x280_RS/bb/88/88/bb888815367bffe2bd9236700c069466.jpg" alt="DPMods">
-                <div class="p-content">
-                    <div class="p-header">
-                        <span class="p-name">DPMods</span>
-                        <svg class="p-badge" viewBox="0 0 24 24"><path d="M12 2l3.09 3.09L19.5 5.5l-1.09 4.41L21 13l-2.59 3.09.5 4.41-4.41-.5L12 22l-3.09-3.09L4.5 18.5l1.09-4.41L3 11l2.59-3.09-.5-4.41 4.41.5L12 2z"/></svg>
-                        <span class="p-handle">@dpmods · 1h</span>
-                    </div>
-                    <p class="p-text">Dropping the ALL NEW DPMODS VIP LOGIN ENGINE V2 🔥 Pure Java, Glassmorphism, and 100% Anti-Tamper.</p>
-                    
-                    <div class="yt-preview squish" onclick="openLink('https://youtube.com/@dpmods')">
-                        <div class="yt-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-                        <span class="yt-title">[ WATCH NEW VIDEO ]</span>
-                    </div>
-
-                    <div class="p-actions">
-                        <svg class="squish" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-                        <svg class="squish" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
-                        <svg class="squish" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                    </div>
-                </div>
-            </div>
-
-            <div class="post dp-post anim d-3" data-keyword="telegram group keys">
-                <img class="p-avatar squish" src="https://i.pinimg.com/280x280_RS/bb/88/88/bb888815367bffe2bd9236700c069466.jpg" alt="DPMods">
-                <div class="p-content">
-                    <div class="p-header">
-                        <span class="p-name">DPMods</span>
-                        <svg class="p-badge" viewBox="0 0 24 24"><path d="M12 2l3.09 3.09L19.5 5.5l-1.09 4.41L21 13l-2.59 3.09.5 4.41-4.41-.5L12 22l-3.09-3.09L4.5 18.5l1.09-4.41L3 11l2.59-3.09-.5-4.41 4.41.5L12 2z"/></svg>
-                        <span class="p-handle">@dpmods · 5h</span>
-                    </div>
-                    <p class="p-text">Make sure you are in the official Telegram group @dp_mods. I'll be dropping the beta test keys there tonight! 👑</p>
-                    <div class="p-actions">
-                        <svg class="squish" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-                        <svg class="squish" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
-                        <svg class="squish" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                    </div>
-                </div>
-            </div>
-
-        </div>
+        <div style="position:absolute; right:15px; top:50%; transform:translateY(-50%); width:20px; height:60px; background:repeating-linear-gradient(0deg, #fff, #fff 1px, transparent 1px, transparent 3px);"></div>
     </div>
 
-    <div class="bottom-nav">
-        <svg class="active squish" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-        <svg class="squish" onclick="toggleSearch()" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <svg class="squish" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-        <img class="nav-dp squish active" src="https://i.pinimg.com/280x280_RS/bb/88/88/bb888815367bffe2bd9236700c069466.jpg" alt="Profile">
+    <button class="init-btn" onclick="triggerClose()">SYSTEM OVERRIDE</button>
+
+    <div class="cyber-logo">
+        <div class="crosshair">
+            <div class="crosshair-center"></div>
+        </div>
+        <div class="logo-text">MODS</div>
     </div>
+
+    <div class="meta-text">©&℗ DPMODS VIP ENTERTAINMENT INC.</div>
 
 </div>
 
 <script>
-    // --- OPEN LINKS EXTERNALLY ---
-    function openLink(url) {
-        window.open(url, '_blank');
-    }
-
-    // --- ACTION://CLOSE INTEGRATION ---
+    // --- FLAWLESS ACTION://CLOSE INTEGRATION ---
     function triggerClose() {
         const card = document.getElementById('mainCard');
+        const btn = document.querySelector('.init-btn');
         
-        // Disable entrance animations and trigger exit animation
+        // Button visual feedback
+        btn.style.background = 'var(--neon-cyan)';
+        btn.style.color = '#000';
+        btn.innerText = 'GRANTED...';
+
+        // Trigger smooth CSS exit animation
         card.style.animation = 'none';
-        card.style.transform = 'scale(0.90) translateY(30px)';
+        card.style.transition = 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        card.style.transform = 'scale(0.85) translateY(40px)';
         card.style.opacity = '0';
         
-        // Wait for CSS transition to finish, then send the action:// URL
+        // Wait for animation, then send action URL back to Java Webby Engine
         setTimeout(() => {
             window.location.href = "action://close";
-        }, 300);
-    }
-
-    function switchTab(clickedTab) {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        clickedTab.classList.add('active');
-        clickedTab.style.transform = 'scale(0.92)';
-        setTimeout(() => clickedTab.style.transform = 'scale(1)', 150);
-    }
-
-    function toggleSearch() {
-        const searchBox = document.getElementById('searchBar');
-        if (searchBox.classList.contains('show')) {
-            searchBox.classList.remove('show');
-            document.getElementById('searchInput').value = '';
-            filterPosts();
-        } else {
-            searchBox.classList.add('show');
-            document.getElementById('searchInput').focus();
-        }
-    }
-
-    function filterPosts() {
-        const query = document.getElementById('searchInput').value.toLowerCase();
-        const posts = document.querySelectorAll('.dp-post');
-        
-        posts.forEach(post => {
-            const keywords = post.getAttribute('data-keyword').toLowerCase();
-            post.style.display = keywords.includes(query) ? 'flex' : 'none';
-        });
+        }, 400);
     }
 </script>
 
