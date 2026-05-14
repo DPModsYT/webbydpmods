@@ -6,7 +6,7 @@
     <title>DPMods Cyber ID</title>
     <style>
         :root {
-            --bg-metal: #121215;
+            --bg-metal: #0a0a0d;
             --neon-purple: #d500ff;
             --neon-cyan: #00e5ff;
             --text-main: #ffffff;
@@ -19,13 +19,13 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* --- THE BLURRED DIALOG BACKDROP --- */
+        /* --- BLURRED DIALOG BACKDROP --- */
         body {
             margin: 0;
             padding: 0;
-            background-color: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background-color: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             color: var(--text-main);
             font-family: var(--font-sys);
             width: 100vw;
@@ -40,155 +40,175 @@
         .cyber-card {
             width: 88%;
             max-width: 380px;
-            /* Using aspect-ratio ensures it NEVER squishes, always keeps perfect ID Card proportions */
             aspect-ratio: 9 / 16;
             max-height: 85vh;
             background-color: var(--bg-metal);
+            /* Subtle tech grid background */
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 15px 15px;
             position: relative;
-            /* Angled chamfered corners */
             clip-path: polygon(10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10%);
-            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1), 0 20px 50px rgba(0,0,0,0.9);
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1), 0 25px 60px rgba(0,0,0,0.9);
             opacity: 0;
-            transform: scale(0.9) translateY(20px);
-            animation: bootUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            transform: scale(0.9) translateY(30px);
+            animation: bootUp 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
             transition: all 0.4s ease;
+        }
+
+        /* --- PARTICLE SYSTEM CONTAINER --- */
+        #particles {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            overflow: hidden;
+            clip-path: polygon(10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10%);
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px; height: 2px;
+            background: var(--neon-purple);
+            box-shadow: 0 0 8px 2px var(--neon-purple);
+            border-radius: 50%;
+            opacity: 0;
+            animation: floatUp infinite linear;
         }
 
         /* --- ANIMATIONS --- */
         @keyframes bootUp {
             100% { opacity: 1; transform: scale(1) translateY(0); }
         }
+        
+        @keyframes seqFade {
+            0% { opacity: 0; transform: translateX(10px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
 
         @keyframes neonPulse {
-            0%, 100% { box-shadow: 0 0 15px rgba(213, 0, 255, 0.4), inset 0 0 15px rgba(213, 0, 255, 0.2); }
-            50% { box-shadow: 0 0 30px rgba(213, 0, 255, 0.8), inset 0 0 25px rgba(213, 0, 255, 0.5); }
+            0%, 100% { box-shadow: 0 0 15px rgba(213, 0, 255, 0.4), inset 0 0 10px rgba(213, 0, 255, 0.3); }
+            50% { box-shadow: 0 0 35px rgba(213, 0, 255, 0.8), inset 0 0 20px rgba(213, 0, 255, 0.6); }
         }
 
         @keyframes blink {
-            0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--neon-cyan); }
-            50% { opacity: 0.2; box-shadow: 0 0 0 transparent; }
+            0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--neon-cyan); }
+            50% { opacity: 0.1; box-shadow: 0 0 0 transparent; }
         }
 
         @keyframes scanline {
             0% { top: -10%; opacity: 0; }
-            10% { opacity: 0.5; }
-            90% { opacity: 0.5; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
             100% { top: 110%; opacity: 0; }
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            10% { opacity: 0.8; }
+            80% { opacity: 0.5; }
+            100% { transform: translateY(-150px) scale(0.3); opacity: 0; }
+        }
+
+        @keyframes glitch {
+            0% { transform: translateY(-50%) rotate(180deg) translate(0); }
+            20% { transform: translateY(-50%) rotate(180deg) translate(-2px, 1px); }
+            40% { transform: translateY(-50%) rotate(180deg) translate(2px, -1px); }
+            60% { transform: translateY(-50%) rotate(180deg) translate(-1px, 2px); }
+            80% { transform: translateY(-50%) rotate(180deg) translate(1px, -2px); }
+            100% { transform: translateY(-50%) rotate(180deg) translate(0); }
         }
 
         /* --- THE CENTRAL PORTRAIT --- */
         .portrait-wrapper {
             position: absolute;
-            top: 35px;
-            left: 35px;
-            right: 35px;
-            bottom: 140px; /* Gives plenty of room for bottom UI so it doesn't overlap */
+            top: 35px; left: 35px; right: 35px; bottom: 140px; 
             background: url('https://raw.githubusercontent.com/DPModsYT/webbydpmods/refs/heads/main/IMG_20260514_135013.jpg') center/cover no-repeat;
             border: 2px solid var(--neon-purple);
             border-radius: 8px;
-            animation: neonPulse 3s infinite ease-in-out;
+            animation: neonPulse 4s infinite ease-in-out;
             z-index: 1;
             overflow: hidden;
+            opacity: 0;
+            animation: bootUp 0.5s 0.3s forwards, neonPulse 4s 0.8s infinite ease-in-out;
         }
 
-        /* Holographic Scanline over portrait */
+        /* Laser Scanline */
         .portrait-wrapper::after {
             content: '';
             position: absolute;
-            left: 0; right: 0; top: 0; height: 15px;
-            background: linear-gradient(to bottom, transparent, rgba(213, 0, 255, 0.5), transparent);
-            animation: scanline 4s infinite linear;
+            left: 0; right: 0; top: 0; height: 4px;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 20px 4px var(--neon-purple);
+            animation: scanline 3.5s infinite cubic-bezier(0.4, 0, 0.2, 1);
             pointer-events: none;
         }
 
-        /* --- TOP LEFT HARDWARE / ACCENTS --- */
+        /* --- TOP LEFT HARDWARE --- */
         .hardware-screws {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            z-index: 5;
+            position: absolute; top: 15px; left: 15px;
+            display: flex; flex-direction: column; gap: 12px; z-index: 5;
         }
         .status-dot {
-            width: 8px; height: 8px;
-            border-radius: 50%;
+            width: 8px; height: 8px; border-radius: 50%;
             background: var(--neon-cyan);
-            animation: blink 2s infinite ease-in-out;
+            animation: blink 1.5s infinite ease-in-out;
         }
         .screw {
-            width: 8px; height: 8px;
-            border-radius: 50%;
-            background: #444;
-            box-shadow: inset 1px 1px 3px #000;
+            width: 8px; height: 8px; border-radius: 50%;
+            background: #333; box-shadow: inset 1px 1px 3px #000;
         }
 
         .stripe-box {
-            position: absolute;
-            top: 55px; left: 10px;
-            width: 18px; height: 18px;
+            position: absolute; top: 55px; left: 10px; width: 18px; height: 18px;
             background: repeating-linear-gradient(45deg, var(--text-dim), var(--text-dim) 2px, transparent 2px, transparent 4px);
             opacity: 0.6;
         }
         .grad-box {
-            position: absolute;
-            top: 80px; left: 10px;
-            width: 18px; height: 18px;
-            background: linear-gradient(135deg, #fff, #555);
-            opacity: 0.5;
+            position: absolute; top: 80px; left: 10px; width: 18px; height: 18px;
+            background: linear-gradient(135deg, #eee, #444); opacity: 0.5;
         }
 
-        /* --- VERTICAL BRANDING (LEFT EDGE) --- */
+        /* --- VERTICAL BRANDING --- */
         .vertical-brand {
-            position: absolute;
-            left: -15px;
-            top: 50%;
+            position: absolute; left: -15px; top: 50%;
             transform: translateY(-50%) rotate(180deg);
             writing-mode: vertical-rl;
             color: transparent;
             -webkit-text-stroke: 1px var(--neon-purple);
-            font-size: 20px;
-            font-weight: 900;
-            letter-spacing: 6px;
+            font-size: 20px; font-weight: 900; letter-spacing: 6px;
             text-shadow: 0 0 10px rgba(213, 0, 255, 0.4);
             z-index: 5;
+            opacity: 0;
+            animation: bootUp 0.5s 0.5s forwards, glitch 5s infinite step-end;
         }
 
         /* --- RIGHT EDGE DATA SPECS --- */
         .right-specs {
-            position: absolute;
-            right: 8px;
-            top: 30px;
-            display: flex;
-            gap: 15px;
-            writing-mode: vertical-rl;
-            z-index: 5;
+            position: absolute; right: 8px; top: 30px;
+            display: flex; gap: 15px; writing-mode: vertical-rl; z-index: 5;
+            opacity: 0; animation: seqFade 0.5s 0.6s forwards;
         }
         .spec-block { display: flex; flex-direction: column; gap: 2px; }
         .spec-label { color: var(--text-dim); font-size: 7px; letter-spacing: 2px; font-weight: bold; }
         .spec-value { color: var(--text-main); font-size: 9px; letter-spacing: 1px; font-weight: bold; }
 
-        /* --- BOTTOM LEFT ANGLED PANEL (FIXED OVERLAP) --- */
+        /* --- BOTTOM LEFT ANGLED PANEL --- */
         .name-panel {
-            position: absolute;
-            bottom: 50px;
-            left: 0;
-            width: 65%; /* Strictly caps width so it never touches the logo */
-            background: rgba(20, 20, 25, 0.95);
-            backdrop-filter: blur(5px);
+            position: absolute; bottom: 50px; left: 0; width: 65%; 
+            background: rgba(15, 15, 18, 0.95); backdrop-filter: blur(5px);
             padding: 12px 25px 12px 15px;
-            border: 1px solid var(--neon-purple);
-            border-left: none;
+            border: 1px solid var(--neon-purple); border-left: none;
             clip-path: polygon(0 0, 85% 0, 100% 25%, 100% 100%, 0 100%);
             z-index: 10;
+            opacity: 0; animation: bootUp 0.5s 0.7s forwards;
         }
         .name-label { color: var(--neon-purple); font-size: 9px; font-weight: bold; letter-spacing: 2px; }
-        .name-value { color: var(--text-main); font-size: 24px; font-weight: 900; letter-spacing: 1px; margin-bottom: 8px; text-shadow: 0 0 5px rgba(255,255,255,0.3);}
+        .name-value { color: var(--text-main); font-size: 24px; font-weight: 900; letter-spacing: 1px; margin-bottom: 8px; text-shadow: 0 0 8px rgba(255,255,255,0.4);}
         .mission-label { color: var(--neon-purple); font-size: 8px; font-weight: bold; letter-spacing: 2px; }
         .mission-value { color: var(--text-main); font-size: 11px; font-weight: bold; letter-spacing: 1px; }
 
-        /* Small barcode inside panel */
         .barcode {
             position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
             width: 15px; height: 45px;
@@ -198,21 +218,14 @@
 
         /* --- BOTTOM RIGHT CROSSHAIR LOGO --- */
         .cyber-logo {
-            position: absolute;
-            bottom: 55px;
-            right: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-            z-index: 10;
+            position: absolute; bottom: 55px; right: 20px;
+            display: flex; flex-direction: column; align-items: center; gap: 5px; z-index: 10;
+            opacity: 0; animation: seqFade 0.5s 0.8s forwards;
         }
         .crosshair {
-            width: 35px; height: 35px;
-            border: 2px solid var(--text-main);
-            border-radius: 50%;
-            position: relative;
-            box-shadow: 0 0 10px var(--neon-purple);
+            width: 35px; height: 35px; border: 2px solid var(--text-main); border-radius: 50%;
+            position: relative; box-shadow: 0 0 10px var(--neon-purple);
+            animation: neonPulse 2s infinite alternate;
         }
         .crosshair::before { content: ''; position: absolute; top: -8px; bottom: -8px; left: 50%; width: 2px; background: var(--text-main); transform: translateX(-50%); }
         .crosshair::after { content: ''; position: absolute; left: -8px; right: -8px; top: 50%; height: 2px; background: var(--text-main); transform: translateY(-50%); }
@@ -222,47 +235,30 @@
         }
         .logo-text { font-size: 12px; font-weight: 900; letter-spacing: 2px; text-shadow: 0 0 5px var(--neon-purple); }
 
-        /* --- BOTTOM ACTION BAR (FIXED ALIGNMENT) --- */
+        /* --- BOTTOM ACTION BAR --- */
         .action-bar {
-            position: absolute;
-            bottom: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 85%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            z-index: 20;
+            position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%);
+            width: 85%; display: flex; align-items: center; justify-content: space-between; z-index: 20;
+            opacity: 0; animation: bootUp 0.5s 0.9s forwards;
         }
 
-        .meta-text {
-            font-size: 6px;
-            color: var(--text-dim);
-            letter-spacing: 1px;
-            white-space: nowrap;
-        }
+        .meta-text { font-size: 6px; color: var(--text-dim); letter-spacing: 1px; white-space: nowrap; }
 
         .init-btn {
-            background: transparent;
+            background: rgba(0, 229, 255, 0.05);
             border: 1px solid var(--neon-cyan);
             color: var(--neon-cyan);
             padding: 8px 20px;
             font-family: var(--font-sys);
-            font-size: 11px;
-            font-weight: bold;
-            letter-spacing: 2px;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 0 10px rgba(0,229,255,0.2);
-            /* Cyberpunk angled button corners */
+            font-size: 11px; font-weight: bold; letter-spacing: 2px;
+            cursor: pointer; transition: all 0.2s;
+            box-shadow: 0 0 10px rgba(0,229,255,0.2), inset 0 0 5px rgba(0,229,255,0.1);
             clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
         }
 
         .init-btn:active {
-            background: var(--neon-cyan);
-            color: #000;
-            box-shadow: 0 0 20px rgba(0,229,255,0.8);
-            transform: scale(0.95);
+            background: var(--neon-cyan); color: #000;
+            box-shadow: 0 0 20px rgba(0,229,255,0.8); transform: scale(0.95);
         }
 
     </style>
@@ -271,6 +267,8 @@
 
 <div class="cyber-card" id="mainCard">
     
+    <div id="particles"></div>
+
     <div class="portrait-wrapper"></div>
 
     <div class="hardware-screws">
@@ -283,22 +281,10 @@
     <div class="vertical-brand">DPMODS VIP</div>
 
     <div class="right-specs">
-        <div class="spec-block">
-            <span class="spec-label">ID NUMBER</span>
-            <span class="spec-value">DP-101101</span>
-        </div>
-        <div class="spec-block">
-            <span class="spec-label">ADDRESS</span>
-            <span class="spec-value">127.0.0.1_ROOT</span>
-        </div>
-        <div class="spec-block">
-            <span class="spec-label">ISSUE DATE</span>
-            <span class="spec-value">2026.MAY.14</span>
-        </div>
-        <div class="spec-block">
-            <span class="spec-label">EXPIRED DATE</span>
-            <span class="spec-value">LIFETIME_VIP</span>
-        </div>
+        <div class="spec-block"><span class="spec-label">ID NUMBER</span><span class="spec-value">DP-101101</span></div>
+        <div class="spec-block"><span class="spec-label">ADDRESS</span><span class="spec-value">127.0.0.1_ROOT</span></div>
+        <div class="spec-block"><span class="spec-label">ISSUE DATE</span><span class="spec-value">2026.MAY.14</span></div>
+        <div class="spec-block"><span class="spec-label">EXPIRED DATE</span><span class="spec-value">LIFETIME_VIP</span></div>
     </div>
 
     <div class="name-panel">
@@ -322,6 +308,34 @@
 </div>
 
 <script>
+    // --- PARTICLE GENERATOR ENGINE ---
+    function spawnParticles() {
+        const container = document.getElementById('particles');
+        const particleCount = 35; // Amount of digital embers
+        
+        for (let i = 0; i < particleCount; i++) {
+            let p = document.createElement('div');
+            p.className = 'particle';
+            
+            // Randomize position, speed, and delay for organic feel
+            p.style.left = Math.random() * 100 + '%';
+            p.style.top = (80 + Math.random() * 20) + '%'; // Start from bottom
+            p.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            p.style.animationDelay = (Math.random() * 4) + 's';
+            
+            // Randomly tint some particles cyan instead of purple
+            if(Math.random() > 0.7) {
+                p.style.background = 'var(--neon-cyan)';
+                p.style.boxShadow = '0 0 8px 2px var(--neon-cyan)';
+            }
+            
+            container.appendChild(p);
+        }
+    }
+
+    // Start particles when page loads
+    window.onload = spawnParticles;
+
     // --- FLAWLESS ACTION://CLOSE INTEGRATION ---
     function triggerClose() {
         const card = document.getElementById('mainCard');
@@ -332,15 +346,19 @@
         btn.style.color = '#000';
         btn.innerText = 'GRANTED...';
 
+        // Shut down particles instantly
+        document.getElementById('particles').style.opacity = '0';
+
         // Trigger smooth CSS exit animation (Drops down and fades out)
         card.style.animation = 'none';
+        card.style.transition = 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
         card.style.transform = 'scale(0.85) translateY(50px)';
         card.style.opacity = '0';
         
         // Wait for animation, then send action URL back to Java Webby Engine
         setTimeout(() => {
             window.location.href = "action://close";
-        }, 350);
+        }, 400);
     }
 </script>
 
