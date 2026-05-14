@@ -69,7 +69,7 @@
             animation: floatUp infinite linear;
         }
 
-        /* --- TOP MARQUEE TICKER --- */
+        /* --- FAST-LOAD MARQUEE TICKER --- */
         .ticker-wrap {
             position: absolute; top: 0; left: 10%; right: 0; height: 16px;
             background: var(--neon-cyan); color: #000; overflow: hidden;
@@ -77,20 +77,25 @@
             clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%);
         }
         .ticker {
+            display: flex;
+            width: max-content;
+            animation: marquee 12s linear infinite;
+        }
+        .ticker span {
             white-space: nowrap; font-size: 9px; font-weight: 900; letter-spacing: 2px;
-            animation: marquee 15s linear infinite;
+            padding-right: 15px;
         }
 
         /* --- ANIMATIONS --- */
         @keyframes bootUp { 100% { opacity: 1; transform: scale(1) translateY(0); } }
         @keyframes seqFade { 0% { opacity: 0; transform: translateX(15px); } 100% { opacity: 1; transform: translateX(0); } }
-        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         @keyframes spin { 100% { transform: rotate(360deg); } }
         @keyframes spinRev { 100% { transform: rotate(-360deg); } }
         @keyframes blink { 0%, 100% { opacity: 1; box-shadow: 0 0 12px var(--neon-cyan); } 50% { opacity: 0.1; box-shadow: 0 0 0 transparent; } }
         @keyframes scanline { 0% { top: -5%; opacity: 0; } 10% { opacity: 0.8; } 90% { opacity: 0.8; } 100% { top: 105%; opacity: 0; } }
         @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 0; } 10% { opacity: 0.9; } 80% { opacity: 0.5; } 100% { transform: translateY(-200px) scale(0.2); opacity: 0; } }
-        @keyframes floatIcon { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+        @keyframes floatIcon { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
         @keyframes neonPulse { 0%, 100% { box-shadow: 0 0 15px rgba(213, 0, 255, 0.4), inset 0 0 10px rgba(213, 0, 255, 0.2); } 50% { box-shadow: 0 0 30px rgba(213, 0, 255, 0.8), inset 0 0 20px rgba(213, 0, 255, 0.5); } }
 
         /* --- THE CENTRAL PORTRAIT --- */
@@ -142,53 +147,6 @@
         .spec-label { color: var(--text-dim); font-size: 7px; letter-spacing: 2px; font-weight: bold; }
         .spec-value { color: var(--text-main); font-size: 10px; letter-spacing: 1px; font-weight: bold; }
 
-        /* --- FLOATING TELEGRAM COMM LINK (FIXED ALIGNMENT) --- */
-        .tg-wrapper {
-            position: absolute;
-            right: 22px;
-            bottom: 140px; 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            z-index: 15;
-            opacity: 0;
-            animation: bootUp 0.5s 0.7s forwards;
-        }
-        .telegram-btn {
-            width: 44px; height: 44px;
-            border-radius: 50%;
-            background: rgba(0, 229, 255, 0.08);
-            border: 1.5px solid var(--neon-cyan);
-            /* This flex layout guarantees mathematically perfect center alignment */
-            display: flex; 
-            justify-content: center; 
-            align-items: center;
-            padding: 0;
-            margin: 0;
-            box-shadow: 0 0 12px rgba(0,229,255,0.4), inset 0 0 8px rgba(0,229,255,0.2);
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-            animation: floatIcon 3s infinite ease-in-out;
-        }
-        .telegram-btn svg { 
-            width: 24px; height: 24px; 
-            fill: var(--neon-cyan); 
-            display: block;
-            margin: 0; /* Removed the problematic margin */
-            transition: fill 0.2s;
-        }
-        .telegram-btn:active { 
-            background: var(--neon-cyan); 
-            box-shadow: 0 0 25px rgba(0,229,255,1); 
-            transform: scale(0.9); 
-        }
-        .telegram-btn:active svg { fill: #000; }
-        .tg-label {
-            font-size: 7px; color: var(--neon-cyan); font-weight: bold; letter-spacing: 2px;
-            text-shadow: 0 0 5px var(--neon-cyan);
-        }
-
         /* --- BOTTOM LEFT ANGLED PANEL --- */
         .name-panel {
             position: absolute; bottom: 65px; left: 0; width: 60%; 
@@ -207,23 +165,53 @@
             width: 12px; height: 40px; background: repeating-linear-gradient(0deg, #fff, #fff 1px, transparent 1px, transparent 3px); opacity: 0.7;
         }
 
-        /* --- BOTTOM RIGHT HUD CROSSHAIR --- */
+        /* --- BOTTOM RIGHT HUD LOGO / TELEGRAM BUTTON (COMBINED) --- */
         .cyber-logo {
             position: absolute; bottom: 65px; right: 25px;
-            display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 10;
+            display: flex; flex-direction: column; align-items: center; gap: 6px; z-index: 10;
             opacity: 0; animation: seqFade 0.5s 0.9s forwards;
+            cursor: pointer;
         }
+        
+        .cyber-logo:active .crosshair { 
+            transform: scale(0.9); 
+            box-shadow: 0 0 20px var(--neon-cyan); 
+            border-color: var(--neon-cyan); 
+            background: rgba(0, 229, 255, 0.15);
+        }
+        .cyber-logo:active .tg-icon { fill: var(--text-main); }
+        .cyber-logo:active .logo-text { color: var(--neon-cyan); text-shadow: 0 0 8px var(--neon-cyan); }
+
+        .tg-label {
+            font-size: 7px; color: var(--neon-cyan); font-weight: bold; letter-spacing: 2px;
+            text-shadow: 0 0 5px var(--neon-cyan); margin-bottom: 2px;
+        }
+
         .crosshair {
-            width: 40px; height: 40px; border: 2px solid var(--text-main); border-radius: 50%;
+            width: 44px; height: 44px; 
+            border: 2px solid var(--neon-purple); border-radius: 50%;
             position: relative; box-shadow: 0 0 12px var(--neon-purple);
+            display: flex; justify-content: center; align-items: center;
+            background: rgba(0, 229, 255, 0.05);
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        .ring-1 { position: absolute; top: -6px; left: -6px; right: -6px; bottom: -6px; border: 1px dashed var(--neon-cyan); border-radius: 50%; animation: spin 5s linear infinite; }
-        .ring-2 { position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px; border: 1px dotted var(--neon-purple); border-radius: 50%; animation: spinRev 7s linear infinite; }
-        .crosshair-center {
-            position: absolute; top: 50%; left: 50%; width: 14px; height: 14px;
-            border: 2px solid var(--neon-purple); transform: translate(-50%, -50%) rotate(45deg);
+        
+        .ring-1 { position: absolute; top: -6px; left: -6px; right: -6px; bottom: -6px; border: 1px dashed var(--neon-cyan); border-radius: 50%; animation: spin 6s linear infinite; }
+        .ring-2 { position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px; border: 1px dotted var(--neon-purple); border-radius: 50%; animation: spinRev 8s linear infinite; }
+        
+        /* Telegram Icon directly centered in the HUD */
+        .tg-icon { 
+            width: 22px; height: 22px; 
+            fill: var(--neon-cyan); 
+            margin-right: 2px; /* Optical center for the paper airplane */
+            transition: all 0.2s;
+            animation: floatIcon 3s infinite ease-in-out;
         }
-        .logo-text { font-size: 12px; font-weight: 900; letter-spacing: 3px; text-shadow: 0 0 6px var(--neon-purple); }
+
+        .logo-text { 
+            font-size: 11px; font-weight: 900; letter-spacing: 3px; 
+            text-shadow: 0 0 6px var(--neon-purple); transition: all 0.2s; 
+        }
 
         /* --- FIXED ACTION CONSOLE --- */
         .action-console {
@@ -261,7 +249,10 @@
 <div class="cyber-card" id="mainCard">
     
     <div class="ticker-wrap">
-        <div class="ticker">SYSTEM SECURE // DPMODS VIP ENGINE V2 // ENCRYPTION LEVEL: MAXIMUM // AUTHENTICATION REQUIRED // AWAITING INPUT //</div>
+        <div class="ticker">
+            <span>SYSTEM SECURE // DPMODS VIP ENGINE V2 // ENCRYPTION LEVEL: MAXIMUM // AUTHENTICATION REQUIRED // AWAITING INPUT // </span>
+            <span>SYSTEM SECURE // DPMODS VIP ENGINE V2 // ENCRYPTION LEVEL: MAXIMUM // AUTHENTICATION REQUIRED // AWAITING INPUT // </span>
+        </div>
     </div>
 
     <div id="particles"></div>
@@ -288,13 +279,6 @@
         <div class="spec-block"><span class="spec-label">EXPIRED DATE</span><span class="spec-value">LIFETIME_VIP</span></div>
     </div>
 
-    <div class="tg-wrapper">
-        <button class="telegram-btn" onclick="openLink('https://t.me/dp_mods')">
-            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.21-1.12-.33-1.08-.7.02-.19.27-.39.75-.6 2.93-1.28 4.88-2.12 5.86-2.53 2.77-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .24z"/></svg>
-        </button>
-        <div class="tg-label">COMM LINK</div>
-    </div>
-
     <div class="name-panel">
         <div class="name-label">NAME</div>
         <div class="name-value">DPMODS:</div>
@@ -303,11 +287,12 @@
         <div class="barcode"></div>
     </div>
 
-    <div class="cyber-logo">
+    <div class="cyber-logo" onclick="openLink('https://t.me/dp_mods')">
+        <div class="tg-label">COMM LINK</div>
         <div class="crosshair">
             <div class="ring-1"></div>
             <div class="ring-2"></div>
-            <div class="crosshair-center"></div>
+            <svg class="tg-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.21-1.12-.33-1.08-.7.02-.19.27-.39.75-.6 2.93-1.28 4.88-2.12 5.86-2.53 2.77-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .24z"/></svg>
         </div>
         <div class="logo-text">MODS</div>
     </div>
@@ -348,8 +333,6 @@
     // --- OPEN LINKS EXTERNALLY ---
     function openLink(url) {
         window.open(url, '_blank');
-        // Fallback for custom Android WebView routing if needed
-        // window.location.href = "dpmods://" + url;
     }
 
     // --- FLAWLESS ACTION://CLOSE INTEGRATION ---
