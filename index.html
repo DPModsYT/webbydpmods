@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DPMods Fullscreen UI</title>
+    <title>DPMods Dialog UI</title>
     <style>
         :root {
-            --bg-color: #0d0d0d;
+            --card-bg: #0d0d0d;
             --text-primary: #ffffff;
             --text-secondary: #8e8e93;
             --accent-cyan: #00e5ff;
@@ -20,33 +20,48 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Set body to fill the entire WebView with NO margins */
+        /* --- THE DIALOG BACKDROP --- */
         body {
             margin: 0;
             padding: 0;
-            background-color: var(--bg-color);
+            /* Creates a dark, blurred overlay over the transparent Java Dialog */
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
             color: var(--text-primary);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             width: 100vw;
             height: 100vh;
             overflow: hidden;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
+            align-items: center; /* Centers the dialog perfectly */
         }
 
-        /* --- THE EDGE-TO-EDGE CONTAINER --- */
+        /* --- THE FLOATING DIALOG CARD --- */
         .dp-card {
-            width: 100%;
-            height: 100%;
+            width: 90%;
+            max-width: 420px;
+            height: 85vh;
+            max-height: 750px;
+            background-color: var(--card-bg);
+            /* Restored the beautiful dialog corner radius */
+            border-radius: 28px;
             display: flex;
             flex-direction: column;
             position: relative;
+            /* Deep shadow to make it pop off the background */
+            box-shadow: 0 25px 60px rgba(0,0,0,0.8), 0 0 1px rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.05);
+            /* Ensure inner content respects the border radius */
+            overflow: hidden; 
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         /* --- ADVANCED ANIMATIONS --- */
-        @keyframes slideUp {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
+        @keyframes dialogPop {
+            0% { opacity: 0; transform: scale(0.95) translateY(15px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
         }
         
         @keyframes shimmer {
@@ -60,12 +75,10 @@
             100% { transform: scale(1); }
         }
 
-        .anim { opacity: 0; animation: slideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        .anim { opacity: 0; animation: dialogPop 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         .d-1 { animation-delay: 0.05s; } 
         .d-2 { animation-delay: 0.1s; } 
         .d-3 { animation-delay: 0.15s; }
-        .d-4 { animation-delay: 0.2s; }
-        .d-5 { animation-delay: 0.25s; }
 
         .squish { transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer; }
         .squish:active { transform: scale(0.88); }
@@ -77,7 +90,7 @@
             align-items: center;
             padding: 20px 25px;
             z-index: 10;
-            background: var(--bg-color);
+            background: var(--card-bg);
             border-bottom: 1px solid var(--border-subtle);
         }
         .header svg { width: 24px; height: 24px; fill: var(--text-primary); }
@@ -112,7 +125,7 @@
             flex-shrink: 0; 
             background: var(--icon-bg);
             border: 2px solid transparent;
-            background-image: linear-gradient(var(--bg-color), var(--bg-color)), linear-gradient(135deg, var(--accent-cyan), #b400ff);
+            background-image: linear-gradient(var(--card-bg), var(--card-bg)), linear-gradient(135deg, var(--accent-cyan), #b400ff);
             background-origin: border-box;
             background-clip: content-box, border-box;
         }
@@ -120,7 +133,6 @@
         .profile-info { flex: 1; }
         .profile-info h1 { margin: 0 0 2px 0; font-size: 24px; font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px;}
         
-        /* NEW: SUBSCRIBER COUNT BADGE */
         .sub-count {
             font-size: 13px;
             font-weight: 600;
@@ -228,7 +240,7 @@
 </head>
 <body>
 
-<div class="dp-card" id="mainCard">
+<div class="dp-card anim" id="mainCard">
 
     <div class="header">
         <svg class="squish" onclick="triggerClose()" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
@@ -244,7 +256,7 @@
 
     <div class="scroll-content">
         
-        <div class="profile anim">
+        <div class="profile anim d-1">
             <img class="avatar" src="https://i.pinimg.com/280x280_RS/bb/88/88/bb888815367bffe2bd9236700c069466.jpg" alt="DPMods">
             <div class="profile-info">
                 <h1>DPMods <span class="sub-count">10.5K+ Subs</span></h1>
@@ -256,7 +268,7 @@
             </div>
         </div>
 
-        <div class="actions anim d-1">
+        <div class="actions anim d-2">
             <button class="btn-yt squish" onclick="openLink('https://youtube.com/@dpmods')">
                 <svg viewBox="0 0 24 24" fill="#ff0000"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
                 Subscribe
@@ -269,7 +281,7 @@
             </button>
         </div>
 
-        <div class="tabs anim d-2">
+        <div class="tabs anim d-3">
             <div class="tab active squish" onclick="switchTab(this)">Latest Videos</div>
             <div class="tab squish" onclick="switchTab(this)">Updates</div>
         </div>
@@ -299,7 +311,7 @@
                 </div>
             </div>
 
-            <div class="post dp-post anim d-4" data-keyword="telegram group keys">
+            <div class="post dp-post anim d-3" data-keyword="telegram group keys">
                 <img class="p-avatar squish" src="https://i.pinimg.com/280x280_RS/bb/88/88/bb888815367bffe2bd9236700c069466.jpg" alt="DPMods">
                 <div class="p-content">
                     <div class="p-header">
@@ -319,7 +331,7 @@
         </div>
     </div>
 
-    <div class="bottom-nav anim d-5">
+    <div class="bottom-nav">
         <svg class="active squish" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
         <svg class="squish" onclick="toggleSearch()" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
         <svg class="squish" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
@@ -338,11 +350,12 @@
     function triggerClose() {
         const card = document.getElementById('mainCard');
         
+        // Disable entrance animations and trigger exit animation
         card.style.animation = 'none';
-        card.style.transform = 'translateY(30px)';
+        card.style.transform = 'scale(0.90) translateY(30px)';
         card.style.opacity = '0';
         
-        // Exact action required for the Java WebView to close the dialog
+        // Wait for CSS transition to finish, then send the action:// URL
         setTimeout(() => {
             window.location.href = "action://close";
         }, 300);
