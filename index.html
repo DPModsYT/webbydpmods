@@ -40,7 +40,6 @@
         .cyber-card {
             width: 92%;
             max-width: 400px;
-            /* Taller aspect ratio prevents cramped elements */
             aspect-ratio: 5 / 8;
             max-height: 88vh;
             background-color: var(--bg-metal);
@@ -49,7 +48,6 @@
                 linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
             background-size: 20px 20px;
             position: relative;
-            /* Angled corners */
             clip-path: polygon(10% 0, 100% 0, 100% 92%, 92% 100%, 0 100%, 0 8%);
             box-shadow: inset 0 0 0 1px rgba(255,255,255,0.15), 0 30px 60px rgba(0,0,0,0.95);
             opacity: 0;
@@ -58,7 +56,7 @@
             transition: all 0.4s ease;
         }
 
-        /* --- PARTICLE SYSTEM CONTAINER --- */
+        /* --- PARTICLE SYSTEM --- */
         #particles {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 2; overflow: hidden;
@@ -92,13 +90,14 @@
         @keyframes blink { 0%, 100% { opacity: 1; box-shadow: 0 0 12px var(--neon-cyan); } 50% { opacity: 0.1; box-shadow: 0 0 0 transparent; } }
         @keyframes scanline { 0% { top: -5%; opacity: 0; } 10% { opacity: 0.8; } 90% { opacity: 0.8; } 100% { top: 105%; opacity: 0; } }
         @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 0; } 10% { opacity: 0.9; } 80% { opacity: 0.5; } 100% { transform: translateY(-200px) scale(0.2); opacity: 0; } }
+        @keyframes floatIcon { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
         @keyframes neonPulse { 0%, 100% { box-shadow: 0 0 15px rgba(213, 0, 255, 0.4), inset 0 0 10px rgba(213, 0, 255, 0.2); } 50% { box-shadow: 0 0 30px rgba(213, 0, 255, 0.8), inset 0 0 20px rgba(213, 0, 255, 0.5); } }
 
         /* --- THE CENTRAL PORTRAIT --- */
         .portrait-wrapper {
             position: absolute;
             top: 45px; left: 40px; right: 40px; 
-            bottom: 155px; /* Ample space to prevent bottom overlaps */
+            bottom: 155px; 
             background: url('https://raw.githubusercontent.com/DPModsYT/webbydpmods/refs/heads/main/IMG_20260514_135013.jpg') center/cover no-repeat;
             border: 2px solid var(--neon-purple); border-radius: 6px;
             animation: bootUp 0.5s 0.3s forwards, neonPulse 3s 0.8s infinite ease-in-out;
@@ -143,6 +142,48 @@
         .spec-label { color: var(--text-dim); font-size: 7px; letter-spacing: 2px; font-weight: bold; }
         .spec-value { color: var(--text-main); font-size: 10px; letter-spacing: 1px; font-weight: bold; }
 
+        /* --- FLOATING TELEGRAM COMM LINK --- */
+        .tg-wrapper {
+            position: absolute;
+            right: 20px;
+            bottom: 140px; /* Sits perfectly above the Crosshair logo */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            z-index: 15;
+            opacity: 0;
+            animation: bootUp 0.5s 0.7s forwards;
+        }
+        .telegram-btn {
+            width: 45px; height: 45px;
+            border-radius: 50%;
+            background: rgba(0, 229, 255, 0.05);
+            border: 1px solid var(--neon-cyan);
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 0 10px rgba(0,229,255,0.3), inset 0 0 8px rgba(0,229,255,0.2);
+            cursor: pointer;
+            transition: all 0.2s;
+            animation: floatIcon 3s infinite ease-in-out;
+            padding: 0;
+        }
+        .telegram-btn svg { 
+            width: 22px; height: 22px; 
+            fill: var(--neon-cyan); 
+            margin-right: 2px; /* Centers the paper airplane visually */
+            transition: fill 0.2s;
+        }
+        .telegram-btn:active { 
+            background: var(--neon-cyan); 
+            box-shadow: 0 0 20px rgba(0,229,255,0.9); 
+            transform: scale(0.9); 
+        }
+        .telegram-btn:active svg { fill: #000; }
+        .tg-label {
+            font-size: 7px; color: var(--neon-cyan); font-weight: bold; letter-spacing: 2px;
+            text-shadow: 0 0 5px var(--neon-cyan);
+        }
+
         /* --- BOTTOM LEFT ANGLED PANEL --- */
         .name-panel {
             position: absolute; bottom: 65px; left: 0; width: 60%; 
@@ -150,7 +191,7 @@
             padding: 12px 20px 12px 15px;
             border: 1px solid var(--neon-purple); border-left: none;
             clip-path: polygon(0 0, 85% 0, 100% 25%, 100% 100%, 0 100%);
-            z-index: 10; opacity: 0; animation: bootUp 0.5s 0.7s forwards;
+            z-index: 10; opacity: 0; animation: bootUp 0.5s 0.8s forwards;
         }
         .name-label { color: var(--neon-purple); font-size: 9px; font-weight: bold; letter-spacing: 2px; }
         .name-value { color: var(--text-main); font-size: 22px; font-weight: 900; letter-spacing: 1px; margin-bottom: 6px; text-shadow: 0 0 8px rgba(255,255,255,0.4);}
@@ -165,34 +206,27 @@
         .cyber-logo {
             position: absolute; bottom: 65px; right: 25px;
             display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 10;
-            opacity: 0; animation: seqFade 0.5s 0.8s forwards;
+            opacity: 0; animation: seqFade 0.5s 0.9s forwards;
         }
         .crosshair {
             width: 40px; height: 40px; border: 2px solid var(--text-main); border-radius: 50%;
             position: relative; box-shadow: 0 0 12px var(--neon-purple);
         }
-        /* Spinning HUD Rings */
         .ring-1 { position: absolute; top: -6px; left: -6px; right: -6px; bottom: -6px; border: 1px dashed var(--neon-cyan); border-radius: 50%; animation: spin 5s linear infinite; }
         .ring-2 { position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px; border: 1px dotted var(--neon-purple); border-radius: 50%; animation: spinRev 7s linear infinite; }
-        
         .crosshair-center {
             position: absolute; top: 50%; left: 50%; width: 14px; height: 14px;
             border: 2px solid var(--neon-purple); transform: translate(-50%, -50%) rotate(45deg);
         }
         .logo-text { font-size: 12px; font-weight: 900; letter-spacing: 3px; text-shadow: 0 0 6px var(--neon-purple); }
 
-        /* --- PERFECTLY CENTERED ACTION CONSOLE (FIXES CLIPPING) --- */
+        /* --- PERFECTLY CENTERED ACTION CONSOLE --- */
         .action-console {
             position: absolute;
-            bottom: 15px; /* Raised securely above the bottom cut */
-            left: 0;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            z-index: 20;
-            opacity: 0; animation: bootUp 0.5s 0.9s forwards;
+            bottom: 15px;
+            left: 0; width: 100%;
+            display: flex; flex-direction: column; align-items: center; gap: 6px;
+            z-index: 20; opacity: 0; animation: bootUp 0.5s 1s forwards;
         }
 
         .meta-text { font-size: 7px; color: var(--text-dim); letter-spacing: 2px; }
@@ -207,7 +241,6 @@
             font-size: 13px; font-weight: bold; letter-spacing: 3px;
             cursor: pointer; transition: all 0.2s;
             box-shadow: 0 0 15px rgba(0,229,255,0.2), inset 0 0 8px rgba(0,229,255,0.1);
-            /* Double chamfered corners for the button */
             clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
         }
 
@@ -248,6 +281,13 @@
         <div class="spec-block"><span class="spec-label">ADDRESS</span><span class="spec-value">127.0.0.1_ROOT</span></div>
         <div class="spec-block"><span class="spec-label">ISSUE DATE</span><span class="spec-value">2026.MAY.14</span></div>
         <div class="spec-block"><span class="spec-label">EXPIRED DATE</span><span class="spec-value">LIFETIME_VIP</span></div>
+    </div>
+
+    <div class="tg-wrapper">
+        <button class="telegram-btn" onclick="openLink('https://t.me/dp_mods')">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.21-1.12-.33-1.08-.7.02-.19.27-.39.75-.6 2.93-1.28 4.88-2.12 5.86-2.53 2.77-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .24z"/></svg>
+        </button>
+        <div class="tg-label">COMM LINK</div>
     </div>
 
     <div class="name-panel">
@@ -299,6 +339,13 @@
     }
 
     window.onload = spawnParticles;
+
+    // --- OPEN LINKS EXTERNALLY ---
+    function openLink(url) {
+        window.open(url, '_blank');
+        // Fallback for custom Android WebView routing if needed
+        // window.location.href = "dpmods://" + url;
+    }
 
     // --- FLAWLESS ACTION://CLOSE INTEGRATION ---
     function triggerClose() {
